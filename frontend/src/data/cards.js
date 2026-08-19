@@ -77,7 +77,7 @@ export const ARTIST_TAGS = [
 // this one is pulled up into the same pinned frame. Then the centre stack of
 // portrait cards spreads into a top-left -> bottom-right diagonal.
 export const P3_HANDOFF = [0.6, 0.72]; // (legacy) reserved
-export const P3_START = 0.6; // instant-swap marker: Animation 2 begins here
+export const P3_START = 0.68; // Animation 2 begins its fan after the crossfade
 
 const P3 = {
   allgood: "https://static.prod-images.emergentagent.com/jobs/5b732ca7-c734-48e7-9203-468798ae1165/images/06e9e2b1a02467b198c91b968c49c40cffd0f5fb855ff75bba408523da131c23.jpeg",
