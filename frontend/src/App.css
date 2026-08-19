@@ -1,0 +1,76 @@
+.App {
+    width: 100%;
+}
+
+/* Premium light rounded hero panel */
+.hero-panel {
+    background:
+        radial-gradient(120% 90% at 50% -10%, #ffffff 0%, #f6f6f5 45%, #f0f0ef 100%);
+    box-shadow:
+        0 1px 0 0 rgba(255, 255, 255, 0.9) inset,
+        0 40px 80px -40px rgba(20, 20, 22, 0.28),
+        0 12px 30px -20px rgba(20, 20, 22, 0.18);
+}
+
+/* soft ambient light blobs, extremely subtle */
+.hero-panel::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+        radial-gradient(50% 40% at 22% 30%, rgba(120, 160, 255, 0.05), transparent 70%),
+        radial-gradient(46% 38% at 82% 26%, rgba(255, 170, 120, 0.05), transparent 70%);
+    pointer-events: none;
+}
+
+/* Artwork cards */
+.artwork-card {
+    width: var(--card);
+    height: var(--card);
+    will-change: transform;
+    box-shadow:
+        0 2px 6px -2px rgba(15, 15, 18, 0.18),
+        0 22px 44px -20px rgba(15, 15, 18, 0.35);
+}
+
+/* scroll hint travelling line */
+.scroll-line::after {
+    content: "";
+    position: absolute;
+    top: -100%;
+    left: 0;
+    width: 100%;
+    height: 60%;
+    background: #171717;
+    animation: scroll-travel 1.9s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+}
+
+@keyframes scroll-travel {
+    0% {
+        transform: translateY(0%);
+    }
+    100% {
+        transform: translateY(280%);
+    }
+}
+
+/* Footer marquee */
+.marquee {
+    animation: marquee-slide 26s linear infinite;
+}
+
+@keyframes marquee-slide {
+    from {
+        transform: translateX(0);
+    }
+    to {
+        transform: translateX(-50%);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .marquee,
+    .scroll-line::after {
+        animation: none;
+    }
+}
