@@ -46,4 +46,12 @@ Extended the SAME sticky scene (now 720vh) into one continuous scroll timeline (
 - `ArtworkCard.jsx`: rewritten to drive fan→collapse→hold→e-commerce via one master-progress track (transform+opacity only).
 - Verified via screenshots: keyframes match provided images 1–4; reverse is intrinsic (single motion system).
 
+## Implemented — Part 3: centre-stack -> diagonal cascade (2026-08-19)
+Added a THIRD scroll phase inside the SAME pinned panel (section now 1150vh, single navbar, no gap/duplication):
+- Seamless handoff (`P3_HANDOFF` 0.60–0.72): the whole e-commerce group scrolls up & fades out while the phase-3 group is translated up into the same frame.
+- Existing sequence remapped onto `p1` = progress[0,0.60] so nothing was retuned.
+- `Phase3Scene.jsx`: background editorial headline (green accent words + icon chips), @alician/@andrea start bubbles + @Johnson end bubble, three drifting control icons.
+- `Phase3Card.jsx` + `PHASE3_CARDS`: 6 generated portrait posters (All Good Things, Staff, le Fleur, Green Knight, Limmer, Fluffy Worm) + a white "Where Art Meets Market" info card, animating from a messy centre stack (`rs` rotations) into a top-left→bottom-right diagonal (`p3` = progress[0.72,0.94], holds to end).
+- Verified via screenshots: State 1 (centre stack), State 3 (diagonal) and the handoff all match references; single persistent nav, continuous light background.
+
 ## Backlog

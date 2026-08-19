@@ -69,3 +69,42 @@ export const ARTIST_TAGS = [
   { id: "howard", handle: "@howard", variant: "red", x: 20, y: -140, appear: [0.8, 0.88] },
   { id: "robin", handle: "@robin", variant: "dark", x: 270, y: -80, appear: [0.86, 0.94] },
 ];
+
+// ---------------------------------------------------------------------------
+// THIRD ANIMATION — messy centre stack -> cascading diagonal staircase
+// ---------------------------------------------------------------------------
+// Handoff window: the previous (e-commerce) sequence scrolls up & out while
+// this one is pulled up into the same pinned frame. Then the centre stack of
+// portrait cards spreads into a top-left -> bottom-right diagonal.
+export const P3_HANDOFF = [0.6, 0.72]; // old-out / new-in
+export const P3_START = 0.72; // spread begins
+
+const P3 = {
+  allgood: "https://static.prod-images.emergentagent.com/jobs/5b732ca7-c734-48e7-9203-468798ae1165/images/06e9e2b1a02467b198c91b968c49c40cffd0f5fb855ff75bba408523da131c23.jpeg",
+  staff: "https://static.prod-images.emergentagent.com/jobs/5b732ca7-c734-48e7-9203-468798ae1165/images/ba96e2d5d140e93aff8ab167770d90d164d0c5ed95e0abafb15d2026aff18fdb.jpeg",
+  fleur: "https://static.prod-images.emergentagent.com/jobs/5b732ca7-c734-48e7-9203-468798ae1165/images/52426b9cd19b50e97cf668df03c92961981895682384ee185e532a52d7fd36dc.jpeg",
+  knight: "https://static.prod-images.emergentagent.com/jobs/5b732ca7-c734-48e7-9203-468798ae1165/images/d6baceba8760b3ac48590c586d30173e043f0ff7569aa4687ad9f15368a8003b.jpeg",
+  limmer: "https://static.prod-images.emergentagent.com/jobs/5b732ca7-c734-48e7-9203-468798ae1165/images/13a767cba5099127618b0b7413eb88d815b22d2ff9ae15679dabfe5e2cc61e5f.jpeg",
+  fluffy: "https://static.prod-images.emergentagent.com/jobs/5b732ca7-c734-48e7-9203-468798ae1165/images/e69bb18d7146930955b268567ef2d2c04b6cc9c4137a4c0e5ecd4d1c45a0c6db.jpeg",
+};
+
+// Order = left -> right in the final diagonal. `rs` = messy start rotation
+// (centre stack), `r` = tidy end rotation, x/y = end offset from centre (px).
+// z: white info card floats above its neighbours; images layer left->right.
+export const PHASE3_CARDS = [
+  { id: "p0", type: "image", image: P3.allgood, title: "All Good Things", rs: -10, x: -450, y: -177, r: -8, z: 1 },
+  { id: "p1", type: "info", rs: 6, x: -300, y: -113, r: -3, z: 7 },
+  { id: "p2", type: "image", image: P3.staff, title: "Staff Only", rs: 9, x: -150, y: -49, r: -2, z: 2 },
+  { id: "p3", type: "image", image: P3.fleur, title: "le Fleur", rs: -6, x: 0, y: 15, r: 0, z: 3 },
+  { id: "p4", type: "image", image: P3.knight, title: "The Green Knight", rs: 5, x: 150, y: 79, r: 1, z: 4 },
+  { id: "p5", type: "image", image: P3.limmer, title: "Limmer", rs: -9, x: 300, y: 143, r: 2, z: 5 },
+  { id: "p6", type: "image", image: P3.fluffy, title: "Fluffy Worm", rs: -3, x: 450, y: 207, r: 4, z: 6 },
+];
+
+// Speech bubbles: alician/andrea belong to the centre-stack state (fade out on
+// spread); johnson attaches to the knight card in the final composition.
+export const P3_BUBBLES = [
+  { id: "alician", handle: "@alician", variant: "dark", x: -235, y: -30, mode: "start" },
+  { id: "andrea", handle: "@andrea", variant: "blue", x: 245, y: -35, mode: "start" },
+  { id: "johnson", handle: "@Johnson", variant: "orange", x: 175, y: -30, mode: "end" },
+];

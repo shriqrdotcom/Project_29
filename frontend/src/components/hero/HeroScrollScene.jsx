@@ -8,13 +8,15 @@ import { HeroSupportingContent } from "./HeroSupportingContent";
 import { EcomContent } from "./EcomContent";
 import { ArtistTags } from "./ArtistTags";
 import { EcomControls } from "./EcomControls";
-import { CARDS, CARD_MOTION, CARD_ECOM } from "../../data/cards";
+import { Phase3Scene } from "./Phase3Scene";
+import { CARDS, CARD_MOTION, CARD_ECOM, P3_HANDOFF } from "../../data/cards";
 
 const computeResponsive = () => {
   const w = typeof window !== "undefined" ? window.innerWidth : 1280;
-  if (w < 640) return { sx: 0.34, sy: 1.45, ex: 0.5, cardSize: 106 };
-  if (w < 1024) return { sx: 0.6, sy: 1.05, ex: 0.72, cardSize: 138 };
-  return { sx: 1, sy: 1, ex: 1, cardSize: 168 };
+  const vh = typeof window !== "undefined" ? window.innerHeight : 800;
+  if (w < 640) return { sx: 0.34, sy: 1.45, ex: 0.5, cardSize: 106, p3s: 0.42, p3card: 108, vh };
+  if (w < 1024) return { sx: 0.6, sy: 1.05, ex: 0.72, cardSize: 138, p3s: 0.7, p3card: 138, vh };
+  return { sx: 1, sy: 1, ex: 1, cardSize: 168, p3s: 1, p3card: 166, vh };
 };
 
 const GREEN_INDEX = 6;
@@ -48,11 +50,20 @@ export const HeroScrollScene = () => {
     restDelta: 0.0005,
   });
 
-  // First hero (Screenshot 1 sequence) subtle scroll + fade-out during collapse.
-  const headlineScale = useTransform(progress, [0, 0.24], [1, 1.04]);
-  const headlineY = useTransform(progress, [0, 0.24], [0, -6]);
-  const firstOpacity = useTransform(progress, [0.28, 0.4], [1, 0]);
-  const firstY = useTransform(progress, [0.28, 0.4], [0, -46]);
+  // Existing sequence (hero fan -> collapse -> e-commerce) now plays across the
+  // first 60% of the scene, driven by a remapped progress so nothing retunes.
+  const p1 = useTransform(progress, [0, 0.6], [0, 1]);
+
+  const headlineScale = useTransform(p1, [0, 0.24], [1, 1.04]);
+  const headlineY = useTransform(p1, [0, 0.24], [0, -6]);
+  const firstOpacity = useTransform(p1, [0.28, 0.4], [1, 0]);
+  const firstY = useTransform(p1, [0.28, 0.4], [0, -46]);
+
+  // Seamless handoff: old content scrolls up & out, phase-3 is pulled up in.
+  const oldY = useTransform(progress, P3_HANDOFF, [0, -rs.vh]);
+  const oldOpacity = useTransform(progress, [0.62, 0.7], [1, 0]);
+  const newY = useTransform(progress, P3_HANDOFF, [rs.vh, 0]);
+  const newOpacity = useTransform(progress, [0.62, 0.7], [0, 1]);
 
   const hintOpacity = useTransform(scrollYProgress, [0, 0.1], [1, 0]);
   const barScaleX = useTransform(progress, [0, 1], [0, 1]);
@@ -62,7 +73,7 @@ export const HeroScrollScene = () => {
       ref={sceneRef}
       data-testid="hero-scene"
       className="relative"
-      style={{ height: "720vh" }}
+      style={{ height: "1150vh" }}
     >
       <div className="sticky top-0 h-screen w-full p-2.5 sm:p-4">
         <motion.div
@@ -72,6 +83,7 @@ export const HeroScrollScene = () => {
           className="hero-panel relative flex h-full w-full flex-col overflow-hidden rounded-[24px] sm:rounded-[30px]"
           style={{ "--card": `${rs.cardSize}px` }}
         >
+          {/* Persistent navigation (single, never duplicated) */}
           <HeroNavigation />
 
           <motion.div
@@ -79,41 +91,43 @@ export const HeroScrollScene = () => {
             className="absolute left-0 top-0 z-[90] h-[3px] w-full origin-left bg-neutral-900/80"
           />
 
-          {/* First hero content (collapses / fades out) */}
-          <motion.div
-            style={{ opacity: firstOpacity, y: firstY }}
-            className="absolute inset-0 z-30"
-          >
-            <div className="absolute left-0 right-0 top-[15%] flex justify-center">
-              <HeroHeadline scale={headlineScale} y={headlineY} />
+          {/* ===== Existing sequence group (scrolls up & out on handoff) ===== */}
+          <motion.div style={{ y: oldY, opacity: oldOpacity }} className="absolute inset-0">
+            <motion.div style={{ opacity: firstOpacity, y: firstY }} className="absolute inset-0 z-30">
+              <div className="absolute left-0 right-0 top-[15%] flex justify-center">
+                <HeroHeadline scale={headlineScale} y={headlineY} />
+              </div>
+              <div className="absolute left-0 right-0 top-[70%]">
+                <HeroSupportingContent progress={p1} />
+              </div>
+              <FloatingLabels progress={p1} />
+            </motion.div>
+
+            <EcomContent progress={p1} />
+            <EcomControls progress={p1} />
+
+            <div className="absolute inset-0 z-40">
+              {CARDS.map((card, i) => (
+                <ArtworkCard
+                  key={card.id}
+                  card={card}
+                  fan={CARD_MOTION[i]}
+                  ecom={CARD_ECOM[i]}
+                  progress={p1}
+                  sx={rs.sx}
+                  sy={rs.sy}
+                  ex={rs.ex}
+                  isGreen={i === GREEN_INDEX}
+                />
+              ))}
+              <ArtistTags progress={p1} ex={rs.ex} />
             </div>
-            <div className="absolute left-0 right-0 top-[70%]">
-              <HeroSupportingContent progress={progress} />
-            </div>
-            <FloatingLabels progress={progress} />
           </motion.div>
 
-          {/* E-Commerce content (assembles in) */}
-          <EcomContent progress={progress} />
-          <EcomControls progress={progress} />
-
-          {/* Shared artwork stage — cards live across the entire timeline */}
-          <div className="absolute inset-0 z-40">
-            {CARDS.map((card, i) => (
-              <ArtworkCard
-                key={card.id}
-                card={card}
-                fan={CARD_MOTION[i]}
-                ecom={CARD_ECOM[i]}
-                progress={progress}
-                sx={rs.sx}
-                sy={rs.sy}
-                ex={rs.ex}
-                isGreen={i === GREEN_INDEX}
-              />
-            ))}
-            <ArtistTags progress={progress} ex={rs.ex} />
-          </div>
+          {/* ===== Phase 3 group (pulled up into the same frame) ===== */}
+          <motion.div style={{ y: newY, opacity: newOpacity }} className="absolute inset-0 z-20">
+            <Phase3Scene progress={progress} rs={rs} />
+          </motion.div>
 
           {/* Scroll hint */}
           <motion.div
