@@ -13,11 +13,11 @@ export const Phase4Folder = ({ progress, mult }) => {
   const bgScale = useTransform(progress, folderBg, [0.94, 1]);
   const tabOpacity = useTransform(progress, tab, [0, 1]);
 
-  const W = 512 * mult;
-  const H = 384 * mult;
+  const W = 510 * mult;
+  const H = 396 * mult;
   const cx = 217 * mult; // grid centre x offset
-  const cy = 16 * mult; // folder centre y offset
-  const tabBase = -104 * mult; // tab sits just above the top card row
+  const cy = 10 * mult; // folder centre y offset
+  const tabBase = -122 * mult; // tab sits flush ABOVE the top card row
   const tabY = useTransform(progress, tab, [tabBase - 70, tabBase]);
 
   return (

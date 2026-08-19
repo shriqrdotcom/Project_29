@@ -20,7 +20,7 @@ const IconPop = ({ Icon, left, top, progress, delay }) => {
   return (
     <motion.span
       style={{ scale, opacity, left, top }}
-      className="absolute flex h-12 w-12 items-center justify-center rounded-full bg-white text-neutral-900 shadow-[0_10px_28px_-14px_rgba(0,0,0,0.4)]"
+      className="absolute flex h-12 w-12 items-center justify-center rounded-full bg-white text-neutral-900"
     >
       <Icon size={19} strokeWidth={1.6} />
     </motion.span>
