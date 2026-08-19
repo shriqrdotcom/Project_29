@@ -54,4 +54,11 @@ Added a THIRD scroll phase inside the SAME pinned panel (section now 1150vh, sin
 - `Phase3Card.jsx` + `PHASE3_CARDS`: 6 generated portrait posters (All Good Things, Staff, le Fleur, Green Knight, Limmer, Fluffy Worm) + a white "Where Art Meets Market" info card, animating from a messy centre stack (`rs` rotations) into a top-left→bottom-right diagonal (`p3` = progress[0.72,0.94], holds to end).
 - Verified via screenshots: State 1 (centre stack), State 3 (diagonal) and the handoff all match references; single persistent nav, continuous light background.
 
+## Implemented — Part 4: diagonal -> 2x3 folder grid (2026-08-19)
+Continued the same pinned timeline (section now 1500vh). After the diagonal fan holds, the SAME 6 image cards morph (position + size + rotation, via animated width/height) into a 2x3 grid on the right; the white "Where Art Meets Market" info card fades out.
+- `Phase4Folder.jsx`: white folder panel fades/scales in behind the grid with a "Business" row + "Create" pill; a dark "Personal" tab slides down (translateY) into place above the top card row (in front of card tops).
+- `Phase4Left.jsx`: crossfades in "Our vision for any art technology." (word reveal) + subtext + a staggered scatter of circular tool icons (pen, layers, wand, etc.) + eye pill.
+- `Phase3Card.jsx`: unified master-progress transforms driving fan -> hold -> grid (x/y/rotate + width/height + radius).
+- Timing in `P3T`; verified via screenshots against reference states 1–5.
+
 ## Backlog

@@ -1,5 +1,6 @@
 import { motion, useTransform } from "framer-motion";
 import { Disc3 } from "lucide-react";
+import { P3T } from "../../data/cards";
 
 // White "Where Art Meets Market" info card (built as UI, not an image).
 const InfoCard = () => (
@@ -11,9 +12,7 @@ const InfoCard = () => (
           <br />
           Meets Market
         </p>
-        <p className="mt-2 text-[10px] font-medium text-neutral-400">
-          — APY 4.60%
-        </p>
+        <p className="mt-2 text-[10px] font-medium text-neutral-400">— APY 4.60%</p>
       </div>
       <span className="flex h-8 w-8 items-center justify-center rounded-full bg-neutral-900 text-white">
         <Disc3 size={15} strokeWidth={1.75} />
@@ -26,24 +25,43 @@ const InfoCard = () => (
   </div>
 );
 
-// A single portrait card animating from the centre stack to its diagonal slot.
-export const Phase3Card = ({ card, p3, mult }) => {
+// A portrait card that: (1) fans from the centre stack to the diagonal, then
+// (2) morphs — position, size & rotation — into its 2x3 folder-grid slot.
+export const Phase3Card = ({ card, progress, mult, dims }) => {
+  const { fanStart, fanEnd, hold, gridEnd } = P3T;
   const isWhite = card.type === "info";
+  const g = card.g;
 
-  const x = useTransform(p3, [0, 1], [0, card.x * mult]);
-  const y = useTransform(p3, [0, 1], [-30, card.y * mult]);
-  const rotate = useTransform(p3, [0, 1], [card.rs, card.r]);
-  const whiteOpacity = useTransform(p3, [0.12, 0.32], [0, 1]);
+  const stops = [fanStart, fanEnd, hold, gridEnd];
+  const gx = g ? g.x * mult : card.x * mult;
+  const gy = g ? g.y * mult : card.y * mult;
+
+  const x = useTransform(progress, stops, [0, card.x * mult, card.x * mult, gx]);
+  const y = useTransform(progress, stops, [-30, card.y * mult, card.y * mult, gy]);
+  const rotate = useTransform(progress, stops, [card.rs, card.r, card.r, g ? 0 : card.r]);
+  const width = useTransform(progress, [hold, gridEnd], [dims.pw, g ? dims.gw : dims.pw]);
+  const height = useTransform(progress, [hold, gridEnd], [dims.ph, g ? dims.gh : dims.ph]);
+  const radius = useTransform(progress, [hold, gridEnd], [18, 14]);
+
+  // Info card fades in during the fan, then fades out as the grid forms.
+  const whiteOpacity = useTransform(progress, [0.66, 0.74, hold, hold + 0.05], [0, 1, 1, 0]);
+  const infoW = dims.pw * 1.55;
+  const infoH = dims.ph * 0.9;
 
   return (
-    <div
-      className="absolute inset-0 flex items-center justify-center"
-      style={{ zIndex: card.z }}
-    >
+    <div className="absolute inset-0 flex items-center justify-center" style={{ zIndex: card.z }}>
       <motion.div
         data-testid={`phase3-card-${card.id}`}
-        style={{ x, y, rotate, opacity: isWhite ? whiteOpacity : 1 }}
-        className={isWhite ? "p3-info-card" : "p3-card overflow-hidden rounded-[18px] bg-white"}
+        style={{
+          x,
+          y,
+          rotate,
+          width: isWhite ? infoW : width,
+          height: isWhite ? infoH : height,
+          borderRadius: radius,
+          opacity: isWhite ? whiteOpacity : 1,
+        }}
+        className={isWhite ? "p3-info-shell" : "p3-card overflow-hidden bg-white"}
       >
         {isWhite ? (
           <InfoCard />

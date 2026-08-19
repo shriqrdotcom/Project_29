@@ -77,7 +77,18 @@ export const ARTIST_TAGS = [
 // this one is pulled up into the same pinned frame. Then the centre stack of
 // portrait cards spreads into a top-left -> bottom-right diagonal.
 export const P3_HANDOFF = [0.6, 0.72]; // (legacy) reserved
-export const P3_START = 0.68; // Animation 2 begins its fan after the crossfade
+export const P3_START = 0.62; // Animation 2 fan begins after the crossfade
+
+// Phase timing across the master scroll (Animation 2 -> folder grid):
+export const P3T = {
+  fanStart: 0.62,
+  fanEnd: 0.76,
+  hold: 0.8,
+  gridEnd: 0.92,
+  folderBg: [0.8, 0.88],
+  tab: [0.86, 0.93],
+  left: [0.88, 0.99],
+};
 
 const P3 = {
   allgood: "https://static.prod-images.emergentagent.com/jobs/5b732ca7-c734-48e7-9203-468798ae1165/images/06e9e2b1a02467b198c91b968c49c40cffd0f5fb855ff75bba408523da131c23.jpeg",
@@ -88,17 +99,19 @@ const P3 = {
   fluffy: "https://static.prod-images.emergentagent.com/jobs/5b732ca7-c734-48e7-9203-468798ae1165/images/e69bb18d7146930955b268567ef2d2c04b6cc9c4137a4c0e5ecd4d1c45a0c6db.jpeg",
 };
 
-// Order = left -> right in the final diagonal. `rs` = messy start rotation
-// (centre stack), `r` = tidy end rotation, x/y = end offset from centre (px).
-// z: white info card floats above its neighbours; images layer left->right.
+// Order = left -> right in the diagonal. `rs` = messy start rotation,
+// `r` = tidy diagonal rotation, x/y = diagonal offset from centre (px).
+// `g` = final 2x3 grid offset (px); the white info card has no grid slot
+// (it fades out during the morph). Grid rows: [staff,fleur,knight] /
+// [allgood,limmer,fluffy].
 export const PHASE3_CARDS = [
-  { id: "p0", type: "image", image: P3.allgood, title: "All Good Things", rs: -10, x: -450, y: -177, r: -8, z: 1 },
-  { id: "p1", type: "info", rs: 6, x: -300, y: -113, r: -3, z: 7 },
-  { id: "p2", type: "image", image: P3.staff, title: "Staff Only", rs: 9, x: -150, y: -49, r: -2, z: 2 },
-  { id: "p3", type: "image", image: P3.fleur, title: "le Fleur", rs: -6, x: 0, y: 15, r: 0, z: 3 },
-  { id: "p4", type: "image", image: P3.knight, title: "The Green Knight", rs: 5, x: 150, y: 79, r: 1, z: 4 },
-  { id: "p5", type: "image", image: P3.limmer, title: "Limmer", rs: -9, x: 300, y: 143, r: 2, z: 5 },
-  { id: "p6", type: "image", image: P3.fluffy, title: "Fluffy Worm", rs: -3, x: 450, y: 207, r: 4, z: 6 },
+  { id: "p0", type: "image", image: P3.allgood, title: "All Good Things", rs: -10, x: -450, y: -177, r: -8, z: 1, g: { x: 55, y: 102 } },
+  { id: "p1", type: "info", rs: 6, x: -300, y: -113, r: -3, z: 7, g: null },
+  { id: "p2", type: "image", image: P3.staff, title: "Staff Only", rs: 9, x: -150, y: -49, r: -2, z: 2, g: { x: 55, y: -42 } },
+  { id: "p3", type: "image", image: P3.fleur, title: "le Fleur", rs: -6, x: 0, y: 15, r: 0, z: 3, g: { x: 217, y: -42 } },
+  { id: "p4", type: "image", image: P3.knight, title: "The Green Knight", rs: 5, x: 150, y: 79, r: 1, z: 4, g: { x: 379, y: -42 } },
+  { id: "p5", type: "image", image: P3.limmer, title: "Limmer", rs: -9, x: 300, y: 143, r: 2, z: 5, g: { x: 217, y: 102 } },
+  { id: "p6", type: "image", image: P3.fluffy, title: "Fluffy Worm", rs: -3, x: 450, y: 207, r: 4, z: 6, g: { x: 379, y: 102 } },
 ];
 
 // Speech bubbles: alician/andrea belong to the centre-stack state (fade out on

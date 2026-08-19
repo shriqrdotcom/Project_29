@@ -1,7 +1,9 @@
 import { motion, useTransform } from "framer-motion";
 import { Aperture, LayoutGrid, Bell, Palette, Tag } from "lucide-react";
-import { PHASE3_CARDS, P3_BUBBLES, P3_START } from "../../data/cards";
+import { PHASE3_CARDS, P3_BUBBLES, P3T } from "../../data/cards";
 import { Phase3Card } from "./Phase3Card";
+import { Phase4Folder } from "./Phase4Folder";
+import { Phase4Left } from "./Phase4Left";
 
 const bubbleBg = {
   dark: "bg-neutral-900",
@@ -9,10 +11,11 @@ const bubbleBg = {
   orange: "bg-amber-500",
 };
 
-const Bubble = ({ bubble, p3, mult }) => {
-  const startOpacity = useTransform(p3, [0, 0.18], [1, 0]);
-  const endOpacity = useTransform(p3, [0.62, 0.82], [0, 1]);
-  const endY = useTransform(p3, [0.62, 0.82], [10, 0]);
+const Bubble = ({ bubble, progress, mult }) => {
+  const { fanStart, fanEnd, hold } = P3T;
+  const startOpacity = useTransform(progress, [fanStart, fanStart + 0.05], [1, 0]);
+  const endOpacity = useTransform(progress, [fanEnd - 0.06, fanEnd, hold, hold + 0.04], [0, 1, 1, 0]);
+  const endY = useTransform(progress, [fanEnd - 0.06, fanEnd], [10, 0]);
   const isEnd = bubble.mode === "end";
 
   return (
@@ -31,9 +34,7 @@ const Bubble = ({ bubble, p3, mult }) => {
           className={`relative rounded-[13px] px-3.5 py-1.5 text-[12px] font-medium text-white shadow-[0_10px_24px_-12px_rgba(0,0,0,0.5)] ${bubbleBg[bubble.variant]}`}
         >
           {bubble.handle}
-          <span
-            className={`absolute -bottom-1.5 left-6 h-3 w-3 rotate-45 ${bubbleBg[bubble.variant]}`}
-          />
+          <span className={`absolute -bottom-1.5 left-6 h-3 w-3 rotate-45 ${bubbleBg[bubble.variant]}`} />
         </div>
       </motion.div>
     </div>
@@ -47,27 +48,28 @@ const IconBtn = ({ children }) => (
 );
 
 export const Phase3Scene = ({ progress, rs }) => {
-  const p3 = useTransform(progress, [P3_START, 0.92], [0, 1]);
+  const { fanStart, fanEnd, hold } = P3T;
   const mult = rs.p3s;
+  const dims = {
+    pw: rs.p3card,
+    ph: Math.round(rs.p3card * 1.34),
+    gw: Math.round(150 * mult),
+    gh: Math.round(132 * mult),
+  };
 
-  const bgOpacity = useTransform(p3, [0, 0.22], [1, 0]);
-  const iconsY = useTransform(p3, [0, 0.45], [140, -318]);
+  const bgOpacity = useTransform(progress, [fanStart, fanStart + 0.07], [1, 0]);
+  const iconsY = useTransform(progress, [fanStart - 0.02, fanStart + 0.12], [140, -318]);
+  const iconsOpacity = useTransform(progress, [fanEnd, hold], [1, 0]);
 
   return (
-    <div
-      className="absolute inset-0"
-      style={{ "--p3card": `${rs.p3card}px` }}
-      data-testid="phase3-scene"
-    >
-      {/* Background editorial headline (sits behind the stack, fades on spread) */}
+    <div className="absolute inset-0" data-testid="phase3-scene">
+      {/* Background editorial headline (fades out when the fan begins) */}
       <motion.div
         style={{ opacity: bgOpacity }}
         className="pointer-events-none absolute inset-x-0 top-1/2 z-10 -translate-y-1/2 px-6 text-center"
       >
         <p className="font-display mx-auto max-w-4xl text-[clamp(1.7rem,4.2vw,3.1rem)] font-semibold leading-[1.15] tracking-[-0.02em]">
-          <span className="text-neutral-900">
-            Whether you're an artist looking to sell your work
-          </span>{" "}
+          <span className="text-neutral-900">Whether you're an artist looking to sell your work</span>{" "}
           <span className="text-neutral-900">/ or buyer seeking </span>
           <span className="text-emerald-500">unique</span>{" "}
           <span className="text-neutral-900">pieces </span>
@@ -83,32 +85,32 @@ export const Phase3Scene = ({ progress, rs }) => {
         </p>
       </motion.div>
 
-      {/* Card stack -> diagonal */}
+      {/* Folder panel (behind cards) + Personal tab (in front of card tops) */}
+      <Phase4Folder progress={progress} mult={mult} />
+
+      {/* Card stack -> diagonal -> 2x3 grid */}
       <div className="absolute inset-0 z-30">
         {PHASE3_CARDS.map((card) => (
-          <Phase3Card key={card.id} card={card} p3={p3} mult={mult} />
+          <Phase3Card key={card.id} card={card} progress={progress} mult={mult} dims={dims} />
         ))}
         {P3_BUBBLES.map((bubble) => (
-          <Bubble key={bubble.id} bubble={bubble} p3={p3} mult={mult} />
+          <Bubble key={bubble.id} bubble={bubble} progress={progress} mult={mult} />
         ))}
       </div>
 
-      {/* Three floating control icons (drift from centre up toward the nav) */}
+      {/* Three floating control icons (centre-stack state, fade before the grid) */}
       <motion.div
-        style={{ y: iconsY }}
+        style={{ y: iconsY, opacity: iconsOpacity }}
         className="absolute inset-x-0 top-1/2 z-40 flex -translate-y-1/2 justify-center gap-3"
         data-testid="p3-icon-controls"
       >
-        <IconBtn>
-          <Aperture size={17} strokeWidth={1.75} />
-        </IconBtn>
-        <IconBtn>
-          <LayoutGrid size={17} strokeWidth={1.75} />
-        </IconBtn>
-        <IconBtn>
-          <Bell size={17} strokeWidth={1.75} />
-        </IconBtn>
+        <IconBtn><Aperture size={17} strokeWidth={1.75} /></IconBtn>
+        <IconBtn><LayoutGrid size={17} strokeWidth={1.75} /></IconBtn>
+        <IconBtn><Bell size={17} strokeWidth={1.75} /></IconBtn>
       </motion.div>
+
+      {/* Left-side new heading, subtext & tool-icon cluster */}
+      <Phase4Left progress={progress} />
     </div>
   );
 };

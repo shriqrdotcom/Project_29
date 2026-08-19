@@ -52,7 +52,7 @@ export const HeroScrollScene = () => {
 
   // Existing sequence (hero fan -> collapse -> e-commerce) now plays across the
   // first 60% of the scene, driven by a remapped progress so nothing retunes.
-  const p1 = useTransform(progress, [0, 0.6], [0, 1]);
+  const p1 = useTransform(progress, [0, 0.55], [0, 1]);
 
   const headlineScale = useTransform(p1, [0, 0.24], [1, 1.04]);
   const headlineY = useTransform(p1, [0, 0.24], [0, -6]);
@@ -61,12 +61,12 @@ export const HeroScrollScene = () => {
 
   // Smooth crossfade between Animation 1 and Animation 2 (no hard cut, no
   // scroll-up). Old gently fades + scales out; new fades in centered, then fans.
-  const oldOpacity = useTransform(progress, [0.58, 0.66], [1, 0]);
-  const oldScale = useTransform(progress, [0.58, 0.66], [1, 0.97]);
-  const oldPE = useTransform(progress, [0.65, 0.66], ["auto", "none"]);
-  const newOpacity = useTransform(progress, [0.6, 0.68], [0, 1]);
-  const newScale = useTransform(progress, [0.6, 0.68], [0.98, 1]);
-  const newPE = useTransform(progress, [0.6, 0.61], ["none", "auto"]);
+  const oldOpacity = useTransform(progress, [0.55, 0.61], [1, 0]);
+  const oldScale = useTransform(progress, [0.55, 0.61], [1, 0.97]);
+  const oldPE = useTransform(progress, [0.6, 0.61], ["auto", "none"]);
+  const newOpacity = useTransform(progress, [0.56, 0.62], [0, 1]);
+  const newScale = useTransform(progress, [0.56, 0.62], [0.98, 1]);
+  const newPE = useTransform(progress, [0.56, 0.57], ["none", "auto"]);
 
   const hintOpacity = useTransform(scrollYProgress, [0, 0.1], [1, 0]);
   const barScaleX = useTransform(progress, [0, 1], [0, 1]);
@@ -76,7 +76,7 @@ export const HeroScrollScene = () => {
       ref={sceneRef}
       data-testid="hero-scene"
       className="relative"
-      style={{ height: "1150vh" }}
+      style={{ height: "1500vh" }}
     >
       <div className="sticky top-0 h-screen w-full p-2.5 sm:p-4">
         <motion.div
