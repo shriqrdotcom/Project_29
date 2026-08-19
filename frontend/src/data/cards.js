@@ -45,18 +45,18 @@ export const PHASES = {
   ecomEnd: 0.72, // base arrival of the e-commerce card stack
 };
 
-// Final E-Commerce stack — a clean, evenly-stepped diagonal staircase
-// (uniform size, no rotation, consistent overlap) matching the reference:
-// back/top-left -> front/bottom-right, z increases toward the front.
-// Aligned to CARDS by index. `d` = entrance stagger delay.
+// Final E-Commerce stack — a clean HORIZONTAL cascade with a subtle downward
+// step (cards mostly upright, no rotation, natural ~55% overlap). First card
+// sits higher; each following card moves right and slightly lower. z increases
+// left -> right so the right-most card is frontmost. Aligned to CARDS by index.
 export const CARD_ECOM = [
-  { x: 161, y: 4, r: 0, s: 1, z: 3, d: 0.06 }, // 0 halftone faces  (slot 3)
-  { x: 235, y: 60, r: 0, s: 1, z: 4, d: 0.09 }, // 1 cobalt zine    (slot 4)
-  { x: 383, y: 172, r: 0, s: 1, z: 6, d: 0.15 }, // 2 zippy          (slot 6)
-  { x: 87, y: -52, r: 0, s: 1, z: 2, d: 0.03 }, // 3 reach          (slot 2)
-  { x: 13, y: -108, r: 0, s: 1, z: 1, d: 0.0 }, // 4 eye            (slot 1)
-  { x: 309, y: 116, r: 0, s: 1, z: 5, d: 0.12 }, // 5 impasto        (slot 5)
-  { x: 457, y: 228, r: 0, s: 1, z: 7, d: 0.0 }, // 6 green (front)  (slot 7)
+  { x: 116, y: 33, r: 0, s: 1, z: 3, d: 0.06 }, // 0 halftone faces  (slot 3)
+  { x: 194, y: 41, r: 0, s: 1, z: 4, d: 0.09 }, // 1 cobalt zine    (slot 4)
+  { x: 350, y: 65, r: 0, s: 1, z: 6, d: 0.15 }, // 2 zippy          (slot 6)
+  { x: 38, y: 25, r: 0, s: 1, z: 2, d: 0.03 }, // 3 reach          (slot 2)
+  { x: -40, y: -25, r: 0, s: 1, z: 1, d: 0.0 }, // 4 eye (higher)   (slot 1)
+  { x: 272, y: 51, r: 0, s: 1, z: 5, d: 0.12 }, // 5 impasto        (slot 5)
+  { x: 428, y: 80, r: 0, s: 1, z: 7, d: 0.0 }, // 6 green (front)  (slot 7)
 ];
 
 // Vertical base offsets so the fan sits just under the first headline and the
@@ -66,6 +66,6 @@ export const STAGE_OFFSET = { fanBaseY: 34, collapseY: 40 };
 // Floating artist name tags for the final E-Commerce composition.
 // x/y are px offsets from stage centre; `appear` = [start, end] progress.
 export const ARTIST_TAGS = [
-  { id: "howard", handle: "@howard", variant: "red", x: 120, y: -150, appear: [0.8, 0.88] },
-  { id: "robin", handle: "@robin", variant: "dark", x: 300, y: -92, appear: [0.86, 0.94] },
+  { id: "howard", handle: "@howard", variant: "red", x: 20, y: -140, appear: [0.8, 0.88] },
+  { id: "robin", handle: "@robin", variant: "dark", x: 270, y: -80, appear: [0.86, 0.94] },
 ];
