@@ -1,24 +1,50 @@
 import { motion, useTransform } from "framer-motion";
+import { PHASES, STAGE_OFFSET } from "../../data/cards";
 
-// A single artwork card. Each card interpolates its own x / y / rotate / scale
-// against the shared (smoothed) scroll progress. Movement is delayed until
-// ~12% progress so the opening feels calm (Stage A), then eases out.
-export const ArtworkCard = ({ card, cfg, progress, sx, sy }) => {
-  const x = useTransform(progress, [0, 0.12, 1], [0, 0, cfg.x * sx]);
-  const y = useTransform(progress, [0, 0.12, 1], [0, 0, cfg.y * sy]);
-  const rotate = useTransform(progress, [0, 0.12, 1], [cfg.r0, cfg.r0, cfg.r]);
-  const scale = useTransform(progress, [0, 1], [1, cfg.s]);
+// A single artwork card driven by the master scroll progress across the whole
+// two-part sequence:
+//   fan open -> hold -> collapse to centre -> (green holds) -> e-commerce stack
+// Non-green cards fade out during the collapse and fade back in, staggered,
+// as they are "placed" into the final e-commerce composition. The green card
+// persists throughout as the connective focal element.
+export const ArtworkCard = ({ card, fan, ecom, progress, sx, sy, ex, isGreen }) => {
+  const { fanOpen, hold, collapse, greenHold } = PHASES;
+  const { fanBaseY, collapseY } = STAGE_OFFSET;
+
+  const end = isGreen ? 0.85 : 0.6 + ecom.d;
+  const stops = [0, fanOpen, hold, collapse, greenHold, end];
+
+  const fanX = fan.x * sx;
+  const fanY = fan.y * sy + fanBaseY;
+  const ecomX = ecom.x * ex;
+  const ecomY = ecom.y * ex;
+
+  const x = useTransform(progress, stops, [0, fanX, fanX, 0, 0, ecomX]);
+  const y = useTransform(progress, stops, [fanBaseY, fanY, fanY, collapseY, collapseY, ecomY]);
+  const rotate = useTransform(progress, stops, [fan.r0, fan.r, fan.r, 0, 0, ecom.r]);
+  const scale = useTransform(
+    progress,
+    stops,
+    [1, fan.s, fan.s, isGreen ? 1 : 0.9, isGreen ? 1 : 0.9, ecom.s],
+  );
+
+  // Green stays fully visible; others fade during collapse, re-enter staggered.
+  const opacity = useTransform(
+    progress,
+    [0, 0.36, 0.42, 0.55 + ecom.d, 0.63 + ecom.d],
+    [1, 1, 0, 0, 1],
+  );
 
   return (
     <div
       className="absolute inset-0 flex items-center justify-center pointer-events-none"
-      style={{ zIndex: cfg.z }}
+      style={{ zIndex: ecom.z }}
     >
       <motion.div
         data-testid={`artwork-card-${card.id}`}
-        style={{ x, y, rotate, scale }}
-        whileHover={{ scale: cfg.s * 1.05 }}
-        transition={{ type: "spring", stiffness: 260, damping: 22 }}
+        style={{ x, y, rotate, scale, opacity: isGreen ? 1 : opacity }}
+        whileHover={{ scale: ecom.s * 1.04 }}
+        transition={{ type: "spring", stiffness: 260, damping: 24 }}
         className="artwork-card pointer-events-auto relative overflow-hidden rounded-[18px] bg-white"
       >
         <img
@@ -27,7 +53,7 @@ export const ArtworkCard = ({ card, cfg, progress, sx, sy }) => {
           loading="eager"
           decoding="async"
           draggable="false"
-          className="w-full h-full object-cover select-none"
+          className="h-full w-full select-none object-cover"
         />
       </motion.div>
     </div>

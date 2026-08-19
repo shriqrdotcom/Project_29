@@ -35,7 +35,15 @@ Recreate an exact scroll-driven, premium editorial hero for a SaaS marketing sit
 - Responsive multipliers (desktop/tablet/mobile) + overflow-clipped panel (no horizontal scroll).
 - Verified via screenshots: initial state matches Screenshot 1; full-scroll matches Screenshot 2.
 
+## Implemented — Part 2: E-Commerce showcase transition (2026-08-19)
+Extended the SAME sticky scene (now 720vh) into one continuous scroll timeline (no new route, no white flash, header stable):
+- Phases (master spring progress): fan open (0–0.24) → hold → collapse to centre + first-hero heading/labels/supporting fade out (0.30–0.42) → single green card holds (breathing point) → E-Commerce assembles (0.50–1.0).
+- Green card persists across the whole timeline as the connective focal element; the other 6 cards fade out during collapse and re-enter, staggered, into the final stack.
+- `EcomContent.jsx`: "E-COMMERCE" label + progressive word-by-word blur/opacity heading ("Showcase, Sell, & acquire arts to our marketplace." with red accent line) + supporting paragraph + "Join for $9.99/m" / "Read more" CTAs.
+- `ArtistTags.jsx`: @howard (red) + @robin (dark) speech-bubble tags attached to the composition, fade-up staggered.
+- `EcomControls.jsx`: minimal right-side up/down controls fading in near the end.
+- `data/cards.js`: `CARD_ECOM` diagonal lower-right stack config, `PHASES`, `STAGE_OFFSET`, `ARTIST_TAGS`.
+- `ArtworkCard.jsx`: rewritten to drive fan→collapse→hold→e-commerce via one master-progress track (transform+opacity only).
+- Verified via screenshots: keyframes match provided images 1–4; reverse is intrinsic (single motion system).
+
 ## Backlog
-- P2: dark-mode toggle wiring (icon present, currently static).
-- P2: real SaaS card assets swap (drop URLs into `data/cards.js`).
-- P2: dedicated true-mobile visual QA (tooling forced 1920 viewport).

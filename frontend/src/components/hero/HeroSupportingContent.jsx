@@ -2,8 +2,8 @@ import { motion, useTransform } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 
 export const HeroSupportingContent = ({ progress }) => {
-  const opacity = useTransform(progress, [0.55, 0.9], [0, 1]);
-  const y = useTransform(progress, [0.55, 0.9], [18, 0]);
+  const opacity = useTransform(progress, [0.12, 0.24], [0, 1]);
+  const y = useTransform(progress, [0.12, 0.24], [18, 0]);
 
   return (
     <motion.div

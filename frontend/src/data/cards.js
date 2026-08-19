@@ -32,3 +32,40 @@ export const FLOATING_LABELS = [
   { id: "l3", text: "Ready to mint", left: "63%", top: "72%", from: 16 },
   { id: "l4", text: "Live auction", left: "22%", top: "68%", from: -10 },
 ];
+
+// ---------------------------------------------------------------------------
+// SECOND ANIMATION — E-Commerce showcase transition
+// ---------------------------------------------------------------------------
+// Scroll-timeline phase boundaries (fraction of the whole sticky scene).
+export const PHASES = {
+  fanOpen: 0.24, // first hero fan fully open
+  hold: 0.3, // fan holds briefly
+  collapse: 0.42, // cards collapse back to centre, non-green fade out
+  greenHold: 0.55, // single green card holds (breathing point)
+  ecomEnd: 0.72, // base arrival of the e-commerce card stack
+};
+
+// Final E-Commerce stack positions (px offsets from stage centre, desktop).
+// Aligned to CARDS by index. Diagonal overlapping cascade toward lower-right;
+// green (index 6) is frontmost & largest, red-eye (index 4) sits back-left,
+// yellow (index 2) reaches the right edge. `d` = entrance stagger delay.
+export const CARD_ECOM = [
+  { x: 250, y: 150, r: 2, s: 1.02, z: 3, d: 0.06 }, // 0 halftone faces
+  { x: 330, y: 132, r: 1, s: 1.02, z: 4, d: 0.09 }, // 1 cobalt zine
+  { x: 470, y: 222, r: 6, s: 1.12, z: 6, d: 0.15 }, // 2 zippy (far right)
+  { x: 150, y: 92, r: -2, s: 0.96, z: 2, d: 0.03 }, // 3 reach (upper)
+  { x: 58, y: 118, r: -4, s: 1.16, z: 1, d: 0.0 }, // 4 eye (back-left)
+  { x: 400, y: 176, r: 3, s: 1.04, z: 5, d: 0.12 }, // 5 impasto
+  { x: 300, y: 208, r: -2, s: 1.2, z: 7, d: 0.0 }, // 6 green (front)
+];
+
+// Vertical base offsets so the fan sits just under the first headline and the
+// collapsed / green-hold card rests at lower-centre (matches reference 2).
+export const STAGE_OFFSET = { fanBaseY: 34, collapseY: 40 };
+
+// Floating artist name tags for the final E-Commerce composition.
+// x/y are px offsets from stage centre; `appear` = [start, end] progress.
+export const ARTIST_TAGS = [
+  { id: "howard", handle: "@howard", variant: "red", x: 70, y: -70, appear: [0.8, 0.88] },
+  { id: "robin", handle: "@robin", variant: "dark", x: 340, y: 6, appear: [0.86, 0.94] },
+];

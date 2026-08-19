@@ -2,9 +2,9 @@ import { motion, useTransform } from "framer-motion";
 import { FLOATING_LABELS } from "../../data/cards";
 
 const Label = ({ label, progress }) => {
-  const opacity = useTransform(progress, [0.42, 0.68], [0, 1]);
-  const y = useTransform(progress, [0.42, 0.72], [label.from, 0]);
-  const scale = useTransform(progress, [0.42, 0.72], [0.95, 1]);
+  const opacity = useTransform(progress, [0.14, 0.26], [0, 1]);
+  const y = useTransform(progress, [0.14, 0.28], [label.from, 0]);
+  const scale = useTransform(progress, [0.14, 0.28], [0.95, 1]);
 
   return (
     <motion.div
