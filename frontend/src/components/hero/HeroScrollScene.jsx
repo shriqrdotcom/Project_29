@@ -9,7 +9,7 @@ import { EcomContent } from "./EcomContent";
 import { ArtistTags } from "./ArtistTags";
 import { EcomControls } from "./EcomControls";
 import { Phase3Scene } from "./Phase3Scene";
-import { CARDS, CARD_MOTION, CARD_ECOM, P3_HANDOFF } from "../../data/cards";
+import { CARDS, CARD_MOTION, CARD_ECOM } from "../../data/cards";
 
 const computeResponsive = () => {
   const w = typeof window !== "undefined" ? window.innerWidth : 1280;
@@ -59,11 +59,13 @@ export const HeroScrollScene = () => {
   const firstOpacity = useTransform(p1, [0.28, 0.4], [1, 0]);
   const firstY = useTransform(p1, [0.28, 0.4], [0, -46]);
 
-  // Seamless handoff: old content scrolls up & out, phase-3 is pulled up in.
-  const oldY = useTransform(progress, P3_HANDOFF, [0, -rs.vh]);
-  const oldOpacity = useTransform(progress, [0.62, 0.7], [1, 0]);
-  const newY = useTransform(progress, P3_HANDOFF, [rs.vh, 0]);
-  const newOpacity = useTransform(progress, [0.62, 0.7], [0, 1]);
+  // Instant swap threshold: the exact marker where Animation 1 ends and
+  // Animation 2 begins (no scroll-up, no translate — a hard cut in place).
+  const SWAP = 0.6;
+  const oldOpacity = useTransform(progress, [SWAP - 0.001, SWAP], [1, 0]);
+  const oldPE = useTransform(progress, [SWAP - 0.001, SWAP], ["auto", "none"]);
+  const newOpacity = useTransform(progress, [SWAP - 0.001, SWAP], [0, 1]);
+  const newPE = useTransform(progress, [SWAP - 0.001, SWAP], ["none", "auto"]);
 
   const hintOpacity = useTransform(scrollYProgress, [0, 0.1], [1, 0]);
   const barScaleX = useTransform(progress, [0, 1], [0, 1]);
@@ -91,8 +93,8 @@ export const HeroScrollScene = () => {
             className="absolute left-0 top-0 z-[90] h-[3px] w-full origin-left bg-neutral-900/80"
           />
 
-          {/* ===== Existing sequence group (scrolls up & out on handoff) ===== */}
-          <motion.div style={{ y: oldY, opacity: oldOpacity }} className="absolute inset-0">
+          {/* ===== Animation 1 group (instantly hidden at the swap marker) ===== */}
+          <motion.div style={{ opacity: oldOpacity, pointerEvents: oldPE }} className="absolute inset-0">
             <motion.div style={{ opacity: firstOpacity, y: firstY }} className="absolute inset-0 z-30">
               <div className="absolute left-0 right-0 top-[15%] flex justify-center">
                 <HeroHeadline scale={headlineScale} y={headlineY} />
@@ -124,8 +126,8 @@ export const HeroScrollScene = () => {
             </div>
           </motion.div>
 
-          {/* ===== Phase 3 group (pulled up into the same frame) ===== */}
-          <motion.div style={{ y: newY, opacity: newOpacity }} className="absolute inset-0 z-20">
+          {/* ===== Animation 2 group (instantly revealed, centered stack -> fan) ===== */}
+          <motion.div style={{ opacity: newOpacity, pointerEvents: newPE }} className="absolute inset-0 z-20">
             <Phase3Scene progress={progress} rs={rs} />
           </motion.div>
 

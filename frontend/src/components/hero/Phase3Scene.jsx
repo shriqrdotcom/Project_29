@@ -47,7 +47,7 @@ const IconBtn = ({ children }) => (
 );
 
 export const Phase3Scene = ({ progress, rs }) => {
-  const p3 = useTransform(progress, [P3_START, 0.94], [0, 1]);
+  const p3 = useTransform(progress, [P3_START, 0.9], [0, 1]);
   const mult = rs.p3s;
 
   const bgOpacity = useTransform(p3, [0, 0.22], [1, 0]);
