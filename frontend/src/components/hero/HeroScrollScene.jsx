@@ -14,9 +14,9 @@ import { CARDS, CARD_MOTION, CARD_ECOM } from "../../data/cards";
 const computeResponsive = () => {
   const w = typeof window !== "undefined" ? window.innerWidth : 1280;
   const vh = typeof window !== "undefined" ? window.innerHeight : 800;
-  if (w < 640) return { sx: 0.34, sy: 1.45, ex: 0.5, cardSize: 106, p3s: 0.42, p3card: 108, vh };
-  if (w < 1024) return { sx: 0.6, sy: 1.05, ex: 0.72, cardSize: 138, p3s: 0.7, p3card: 138, vh };
-  return { sx: 1, sy: 1, ex: 1, cardSize: 168, p3s: 1, p3card: 166, vh };
+  if (w < 640) return { sx: 0.34, sy: 1.45, ex: 0.5, cardSize: 140, p3s: 0.42, p3card: 108, vh };
+  if (w < 1024) return { sx: 0.6, sy: 1.05, ex: 0.72, cardSize: 180, p3s: 0.7, p3card: 138, vh };
+  return { sx: 1, sy: 1, ex: 1, cardSize: 224, p3s: 1, p3card: 166, vh };
 };
 
 const GREEN_INDEX = 6;
@@ -56,8 +56,8 @@ export const HeroScrollScene = () => {
 
   const headlineScale = useTransform(p1, [0, 0.24], [1, 1.04]);
   const headlineY = useTransform(p1, [0, 0.24], [0, -6]);
-  const firstOpacity = useTransform(p1, [0.28, 0.4], [1, 0]);
-  const firstY = useTransform(p1, [0.28, 0.4], [0, -46]);
+  const firstOpacity = 1;
+  const firstY = useTransform(p1, [0.24, 0.46], [0, -1100]);
 
   // Smooth crossfade between Animation 1 and Animation 2 (no hard cut, no
   // scroll-up). Old gently fades + scales out; new fades in centered, then fans.
@@ -78,7 +78,7 @@ export const HeroScrollScene = () => {
       className="relative"
       style={{ height: "1500vh" }}
     >
-      <div className="sticky top-0 h-screen w-full p-2.5 sm:p-4">
+      <div className="sticky top-0 h-screen w-full p-1 sm:p-1.5">
         <motion.div
           initial={{ opacity: 0, scale: 0.985 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -94,37 +94,40 @@ export const HeroScrollScene = () => {
             className="absolute left-0 top-0 z-[90] h-[3px] w-full origin-left bg-neutral-900/80"
           />
 
-          {/* ===== Animation 1 group (smoothly fades + scales out) ===== */}
-          <motion.div style={{ opacity: oldOpacity, scale: oldScale, pointerEvents: oldPE }} className="absolute inset-0">
-            <motion.div style={{ opacity: firstOpacity, y: firstY }} className="absolute inset-0 z-30">
-              <div className="absolute left-0 right-0 top-[15%] flex justify-center">
+          {/* ===== LAYER 1: Background Text Flow & Sections (z-30) ===== */}
+          <motion.div style={{ opacity: oldOpacity, scale: oldScale, pointerEvents: oldPE }} className="absolute inset-0 z-30">
+            {/* Hero text & buttons scroll UPWARDS out of view without fading */}
+            <motion.div style={{ opacity: firstOpacity, y: firstY }} className="absolute inset-0 pointer-events-auto">
+              <div className="absolute left-0 right-0 top-[13%] flex justify-center">
                 <HeroHeadline scale={headlineScale} y={headlineY} />
               </div>
-              <div className="absolute left-0 right-0 top-[70%]">
+              <div className="absolute left-0 right-0 top-[71%]">
                 <HeroSupportingContent progress={p1} />
               </div>
-              <FloatingLabels progress={p1} />
             </motion.div>
 
+            {/* E-Commerce section text & buttons (fades in cleanly after Hero text scrolls out) */}
             <EcomContent progress={p1} />
             <EcomControls progress={p1} />
+          </motion.div>
 
-            <div className="absolute inset-0 z-40">
-              {CARDS.map((card, i) => (
-                <ArtworkCard
-                  key={card.id}
-                  card={card}
-                  fan={CARD_MOTION[i]}
-                  ecom={CARD_ECOM[i]}
-                  progress={p1}
-                  sx={rs.sx}
-                  sy={rs.sy}
-                  ex={rs.ex}
-                  isGreen={i === GREEN_INDEX}
-                />
-              ))}
-              <ArtistTags progress={p1} ex={rs.ex} />
-            </div>
+          {/* ===== LAYER 2: Foreground Pinned Image Animation (z-50, pointer-events: none) ===== */}
+          <motion.div style={{ opacity: oldOpacity, scale: oldScale }} className="absolute inset-0 z-50 pointer-events-none">
+            <FloatingLabels progress={p1} />
+            {CARDS.map((card, i) => (
+              <ArtworkCard
+                key={card.id}
+                card={card}
+                fan={CARD_MOTION[i]}
+                ecom={CARD_ECOM[i]}
+                progress={p1}
+                sx={rs.sx}
+                sy={rs.sy}
+                ex={rs.ex}
+                isGreen={i === GREEN_INDEX}
+              />
+            ))}
+            <ArtistTags progress={p1} ex={rs.ex} />
           </motion.div>
 
           {/* ===== Animation 2 group (smoothly fades in, centered stack -> fan) ===== */}

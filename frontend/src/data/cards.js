@@ -16,13 +16,13 @@ export const CARDS = [
 // The last card (green) starts on top & centred -> ends front-right, matching
 // the reference screenshots.
 export const CARD_MOTION = [
-  { x: -378, y: 40, r0: 0, r: -12, s: 0.9, z: 1 },
-  { x: -252, y: 14, r0: 0, r: -8, s: 0.94, z: 2 },
-  { x: -128, y: 2, r0: 0, r: -4, s: 0.97, z: 3 },
-  { x: 0, y: -6, r0: 0, r: -1, s: 1.0, z: 4 },
-  { x: 128, y: 2, r0: 0, r: 4, s: 0.98, z: 5 },
-  { x: 252, y: 14, r0: 0, r: 8, s: 0.95, z: 6 },
-  { x: 378, y: 34, r0: 5, r: 12, s: 1.05, z: 7 },
+  { x: -450, y: 24, r0: 0, r: -12, s: 1.0, z: 1 },
+  { x: -300, y: 8, r0: 0, r: -8, s: 1.0, z: 2 },
+  { x: -150, y: -4, r0: 0, r: -4, s: 1.0, z: 3 },
+  { x: 0, y: -12, r0: 0, r: -1, s: 1.0, z: 4 },
+  { x: 150, y: -2, r0: 0, r: 3, s: 1.0, z: 5 },
+  { x: 300, y: 12, r0: 0, r: 7, s: 1.0, z: 6 },
+  { x: 450, y: 22, r0: 0, r: 11, s: 1.0, z: 7 },
 ];
 
 // Small contextual pill/badge metadata that fades in during the scroll.
@@ -38,10 +38,10 @@ export const FLOATING_LABELS = [
 // ---------------------------------------------------------------------------
 // Scroll-timeline phase boundaries (fraction of the whole sticky scene).
 export const PHASES = {
-  fanOpen: 0.24, // first hero fan fully open
-  hold: 0.3, // fan holds briefly
-  collapse: 0.42, // cards collapse back to centre, non-green fade out
-  greenHold: 0.55, // single green card holds (breathing point)
+  fanOpen: 0.18, // first hero fan fully open
+  hold: 0.22, // fan holds
+  collapse: 0.34, // cards collapse back fast (80-90% closed when text is mid-scroll)
+  greenHold: 0.48, // single green card holds
   ecomEnd: 0.72, // base arrival of the e-commerce card stack
 };
 
@@ -49,14 +49,17 @@ export const PHASES = {
 // step (cards mostly upright, no rotation, natural ~55% overlap). First card
 // sits higher; each following card moves right and slightly lower. z increases
 // left -> right so the right-most card is frontmost. Aligned to CARDS by index.
+// Final E-Commerce stack — a clean DIAGONAL CASCADE stepping downward from
+// top-left to bottom-right (x & y increasing sequentially, z increasing
+// left->right so rightmost card overlaps on top). Strictly bound to right column.
 export const CARD_ECOM = [
-  { x: 116, y: 33, r: 0, s: 1, z: 3, d: 0.06 }, // 0 halftone faces  (slot 3)
-  { x: 194, y: 41, r: 0, s: 1, z: 4, d: 0.09 }, // 1 cobalt zine    (slot 4)
-  { x: 350, y: 65, r: 0, s: 1, z: 6, d: 0.15 }, // 2 zippy          (slot 6)
-  { x: 38, y: 25, r: 0, s: 1, z: 2, d: 0.03 }, // 3 reach          (slot 2)
-  { x: -40, y: -25, r: 0, s: 1, z: 1, d: 0.0 }, // 4 eye (higher)   (slot 1)
-  { x: 272, y: 51, r: 0, s: 1, z: 5, d: 0.12 }, // 5 impasto        (slot 5)
-  { x: 428, y: 80, r: 0, s: 1, z: 7, d: 0.0 }, // 6 green (front)  (slot 7)
+  { x: 80, y: 50, r: 0, s: 1, z: 3, d: 0.06 },   // 0 halftone faces (slot 3, z:3)
+  { x: 180, y: 90, r: 0, s: 1, z: 4, d: 0.09 },  // 1 cobalt zine    (slot 4, z:4)
+  { x: 340, y: 170, r: 0, s: 1, z: 6, d: 0.15 }, // 2 zippy snaps    (slot 6, z:6)
+  { x: -20, y: 10, r: 0, s: 1, z: 2, d: 0.03 },  // 3 reach          (slot 2, z:2)
+  { x: -120, y: -30, r: 0, s: 1, z: 1, d: 0.0 }, // 4 eye on future  (slot 1, z:1, top-leftmost)
+  { x: 260, y: 130, r: 0, s: 1, z: 5, d: 0.12 }, // 5 impasto no.7   (slot 5, z:5)
+  { x: 420, y: 210, r: 0, s: 1, z: 7, d: 0.0 },  // 6 green city     (slot 7, z:7, bottom-rightmost)
 ];
 
 // Vertical base offsets so the fan sits just under the first headline and the
@@ -66,8 +69,8 @@ export const STAGE_OFFSET = { fanBaseY: 34, collapseY: 40 };
 // Floating artist name tags for the final E-Commerce composition.
 // x/y are px offsets from stage centre; `appear` = [start, end] progress.
 export const ARTIST_TAGS = [
-  { id: "howard", handle: "@howard", variant: "red", x: 20, y: -140, appear: [0.8, 0.88] },
-  { id: "robin", handle: "@robin", variant: "dark", x: 270, y: -80, appear: [0.86, 0.94] },
+  { id: "howard", handle: "@howard", variant: "red", x: -120, y: -160, appear: [0.82, 0.90] },
+  { id: "robin", handle: "@robin", variant: "dark", x: 180, y: -40, appear: [0.86, 0.94] },
 ];
 
 // ---------------------------------------------------------------------------

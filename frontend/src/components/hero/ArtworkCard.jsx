@@ -25,37 +25,56 @@ export const ArtworkCard = ({ card, fan, ecom, progress, sx, sy, ex, isGreen }) 
   const scale = useTransform(
     progress,
     stops,
-    [1, fan.s, fan.s, isGreen ? 1 : 0.9, isGreen ? 1 : 0.9, ecom.s],
+    [1, fan.s, fan.s, 1, 1, ecom.s],
   );
 
-  // Green stays fully visible; others fade during collapse, re-enter staggered.
+  // Green stays fully visible; others fade in as fan opens on scroll, fade during collapse, re-enter staggered.
   const opacity = useTransform(
     progress,
-    [0, 0.36, 0.42, 0.55 + ecom.d, 0.63 + ecom.d],
-    [1, 1, 0, 0, 1],
+    [0, 0.02, 0.06, 0.24, 0.34, 0.50 + ecom.d, 0.60 + ecom.d],
+    [0, 0, 1, 1, 0, 0, 1],
+  );
+
+  const currentZ = useTransform(
+    progress,
+    [0, 0.30, 0.48, 0.72],
+    [fan.z, fan.z, ecom.z, ecom.z]
   );
 
   return (
-    <div
+    <motion.div
       className="absolute inset-0 flex items-center justify-center pointer-events-none"
-      style={{ zIndex: ecom.z }}
+      style={{ zIndex: currentZ }}
     >
       <motion.div
-        data-testid={`artwork-card-${card.id}`}
-        style={{ x, y, rotate, scale, opacity: isGreen ? 1 : opacity }}
-        whileHover={{ scale: ecom.s * 1.04 }}
-        transition={{ type: "spring", stiffness: 260, damping: 24 }}
-        className="artwork-card pointer-events-auto relative overflow-hidden rounded-[18px] bg-white"
+        initial={isGreen ? { y: 130, scale: 0.72, opacity: 0, rotate: -8 } : false}
+        animate={isGreen ? { y: 0, scale: 1, opacity: 1, rotate: 0 } : false}
+        transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
+        className="pointer-events-auto flex items-center justify-center"
       >
-        <img
-          src={card.image}
-          alt={card.title}
-          loading="eager"
-          decoding="async"
-          draggable="false"
-          className="h-full w-full select-none object-cover"
-        />
+        <motion.div
+          animate={{ translateY: [-5, 5, -5] }}
+          transition={{ duration: 4.2 + (card.id % 3) * 0.7, repeat: Infinity, ease: "easeInOut" }}
+          className="flex items-center justify-center pointer-events-auto"
+        >
+          <motion.div
+            data-testid={`artwork-card-${card.id}`}
+            style={{ x, y, rotate, scale, opacity: isGreen ? 1 : opacity }}
+            whileHover={{ scale: ecom.s * 1.04 }}
+            transition={{ type: "spring", stiffness: 260, damping: 24 }}
+            className="artwork-card pointer-events-auto relative overflow-hidden rounded-[18px] bg-white"
+          >
+            <img
+              src={card.image}
+              alt={card.title}
+              loading="eager"
+              decoding="async"
+              draggable="false"
+              className="h-full w-full select-none object-cover"
+            />
+          </motion.div>
+        </motion.div>
       </motion.div>
-    </div>
+    </motion.div>
   );
 };
