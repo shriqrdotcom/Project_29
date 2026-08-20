@@ -53,7 +53,7 @@ const CardNode = ({ card, index, yProgress, containerHeight }) => {
           zIndex,
           transformOrigin: "center center",
         }}
-        className="relative h-full w-full overflow-hidden rounded-[22px] bg-white shadow-[0_16px_45px_-12px_rgba(0,0,0,0.3)] ring-1 ring-neutral-900/10 pointer-events-auto"
+        className="relative h-full w-full overflow-hidden rounded-[22px] bg-[#e7e7ea] shadow-[0_16px_45px_-12px_rgba(0,0,0,0.3)] ring-1 ring-neutral-900/10 pointer-events-auto"
       >
         <img
           src={card.image}
@@ -61,7 +61,8 @@ const CardNode = ({ card, index, yProgress, containerHeight }) => {
           loading="eager"
           decoding="async"
           draggable="false"
-          className="h-full w-full select-none object-cover"
+          className="h-full w-full select-none object-cover object-center scale-[1.08]"
+          style={{ transformOrigin: "center center" }}
         />
       </motion.div>
     </div>
