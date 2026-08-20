@@ -78,12 +78,12 @@ export const HeroScrollScene = () => {
       className="relative"
       style={{ height: "1500vh" }}
     >
-      <div className="sticky top-0 h-screen w-full p-1 sm:p-1.5">
+      <div className="sticky top-0 h-screen w-full">
         <motion.div
           initial={{ opacity: 0, scale: 0.985 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
-          className="hero-panel relative flex h-full w-full flex-col overflow-hidden rounded-[24px] sm:rounded-[30px]"
+          className="hero-panel relative flex h-full w-full flex-col overflow-hidden"
           style={{ "--card": `${rs.cardSize}px` }}
         >
           {/* Persistent navigation (single, never duplicated) */}
