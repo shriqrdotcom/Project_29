@@ -5,6 +5,7 @@ import { AutoScrollCarouselSection } from "@/components/sections/AutoScrollCarou
 import { NarrativeThreadSection } from "@/components/sections/NarrativeThreadSection";
 import { MarketplaceSection } from "@/components/sections/MarketplaceSection";
 import { DualCardSection } from "@/components/sections/DualCardSection";
+import { SiteFooter } from "@/components/sections/SiteFooter";
 
 const MARQUEE_ITEMS = [
   "A place to display your masterpiece",
@@ -46,6 +47,7 @@ function App() {
       <MarketplaceSection />
       <DualCardSection />
       <MarqueeFooter />
+      <SiteFooter />
     </div>
   );
 }
