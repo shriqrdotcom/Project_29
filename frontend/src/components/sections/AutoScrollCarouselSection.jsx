@@ -2,36 +2,36 @@ import { useEffect, useRef, useState } from "react";
 import { motion, useMotionValue, useAnimationFrame, useTransform } from "framer-motion";
 import { CARDS } from "../../data/cards";
 
-// Duplicate 7-card list 3 times for a seamless, 100% infinite vertical loop
-const LOOP_CARDS = [...CARDS, ...CARDS, ...CARDS];
+// 7-card list duplicated 5 times for a mathematically seamless, glitch-free infinite vertical loop
+const LOOP_CARDS = [...CARDS, ...CARDS, ...CARDS, ...CARDS, ...CARDS];
 
-const SLOT_HEIGHT = 216; // 180px base + 36px gap = 216px slot height
-const TOTAL_LOOP_HEIGHT = CARDS.length * SLOT_HEIGHT; // 7 * 216 = 1512px
+const SLOT_HEIGHT = 206; // 170px base + 36px gap = 206px slot height
+const SET_HEIGHT = CARDS.length * SLOT_HEIGHT; // 7 * 206 = 1442px single set height
 
 const CardNode = ({ card, index, yProgress, containerHeight }) => {
-  // Continuous mathematical interpolation based on pixel distance to 50vh center line
+  // Continuous distance-based scaling interpolation from 1.00 (baseline) -> 1.10 (center peak)
   const scale = useTransform(yProgress, (latestY) => {
-    if (!containerHeight) return 0.80;
+    if (!containerHeight) return 1.0;
     // Calculate card's current center relative to container top
     const cardCenter = index * SLOT_HEIGHT + SLOT_HEIGHT / 2 + latestY;
     const containerCenter = containerHeight / 2;
     const distance = Math.abs(cardCenter - containerCenter);
 
-    // Continuous cosine bell curve interpolation (0.80 base -> 1.30 peak active center)
+    // Cosine bell curve activation zone centered at the screen line (200px radius)
     const norm = Math.min(1, distance / 200);
     const bell = 0.5 * (1 + Math.cos(Math.PI * norm));
-    return 0.80 + bell * 0.50; // ultra-smooth pixel-by-pixel range from 0.80 -> 1.30!
+    return 1.0 + bell * 0.10; // Baseline 1.00 -> Slightly larger 1.10 at center!
   });
 
   const opacity = useTransform(yProgress, (latestY) => {
-    if (!containerHeight) return 0.65;
+    if (!containerHeight) return 0.85;
     const cardCenter = index * SLOT_HEIGHT + SLOT_HEIGHT / 2 + latestY;
     const containerCenter = containerHeight / 2;
     const distance = Math.abs(cardCenter - containerCenter);
 
-    const norm = Math.min(1, distance / 240);
+    const norm = Math.min(1, distance / 220);
     const bell = 0.5 * (1 + Math.cos(Math.PI * norm));
-    return 0.6 + bell * 0.4; // smooth pixel-by-pixel range from 0.6 -> 1.0
+    return 0.85 + bell * 0.15; // 0.85 baseline -> 1.00 active center
   });
 
   const zIndex = useTransform(yProgress, (latestY) => {
@@ -45,7 +45,7 @@ const CardNode = ({ card, index, yProgress, containerHeight }) => {
   });
 
   return (
-    <div className="relative flex h-[180px] w-[340px] sm:w-[420px] shrink-0 items-center justify-center pointer-events-none">
+    <div className="relative flex h-[170px] w-[320px] sm:w-[380px] shrink-0 items-center justify-center pointer-events-none">
       <motion.div
         style={{
           scale,
@@ -53,7 +53,7 @@ const CardNode = ({ card, index, yProgress, containerHeight }) => {
           zIndex,
           transformOrigin: "center center",
         }}
-        className="relative h-full w-full overflow-hidden rounded-[24px] bg-white shadow-[0_22px_55px_-15px_rgba(0,0,0,0.35)] ring-1 ring-neutral-900/10 pointer-events-auto"
+        className="relative h-full w-full overflow-hidden rounded-[22px] bg-white shadow-[0_16px_45px_-12px_rgba(0,0,0,0.3)] ring-1 ring-neutral-900/10 pointer-events-auto"
       >
         <img
           src={card.image}
@@ -71,17 +71,16 @@ const CardNode = ({ card, index, yProgress, containerHeight }) => {
 export const AutoScrollCarouselSection = () => {
   const containerRef = useRef(null);
   const [containerHeight, setContainerHeight] = useState(800);
-  const yProgress = useMotionValue(0);
+  const yProgress = useMotionValue(-SET_HEIGHT); // Start in middle set zone
 
-  // Endlessly smooth, frame-rate independent vertical loop
+  // Endlessly smooth, glitch-free frame-rate independent vertical loop
   useAnimationFrame((_, delta) => {
     const speed = 0.055; // pixels per millisecond
-    const currentY = yProgress.get();
-    let nextY = currentY - delta * speed;
-    if (nextY <= -TOTAL_LOOP_HEIGHT) {
-      nextY += TOTAL_LOOP_HEIGHT;
+    let currentY = yProgress.get() - delta * speed;
+    if (currentY <= -2 * SET_HEIGHT) {
+      currentY += SET_HEIGHT; // Seamless modulo shift (Set 3 -> Set 2 with 0px visual shift)
     }
-    yProgress.set(nextY);
+    yProgress.set(currentY);
   });
 
   useEffect(() => {
