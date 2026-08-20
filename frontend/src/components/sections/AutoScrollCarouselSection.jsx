@@ -5,33 +5,33 @@ import { CARDS } from "../../data/cards";
 // 7-card list duplicated 5 times for a mathematically seamless, glitch-free infinite vertical loop
 const LOOP_CARDS = [...CARDS, ...CARDS, ...CARDS, ...CARDS, ...CARDS];
 
-const SLOT_HEIGHT = 206; // 170px base + 36px gap = 206px slot height
-const SET_HEIGHT = CARDS.length * SLOT_HEIGHT; // 7 * 206 = 1442px single set height
+const SLOT_HEIGHT = 210; // 170px card + 40px gap-10 = 210px actual rendered slot
+const SET_HEIGHT = CARDS.length * SLOT_HEIGHT; // 7 * 210 = 1470px single set height
 
 const CardNode = ({ card, index, yProgress, containerHeight }) => {
-  // Continuous distance-based scaling interpolation from 1.00 (baseline) -> 1.10 (center peak)
+  // Distance-based continuous scaling: 1.00 (standard original shape) -> 1.28 (enlarged active center)
   const scale = useTransform(yProgress, (latestY) => {
     if (!containerHeight) return 1.0;
-    // Calculate card's current center relative to container top
+    // Calculate card's current center relative to container center line
     const cardCenter = index * SLOT_HEIGHT + SLOT_HEIGHT / 2 + latestY;
     const containerCenter = containerHeight / 2;
     const distance = Math.abs(cardCenter - containerCenter);
 
-    // Cosine bell curve activation zone centered at the screen line (200px radius)
-    const norm = Math.min(1, distance / 200);
+    // Cosine distance activation curve centered at the screen line (220px radius)
+    const norm = Math.min(1, distance / 220);
     const bell = 0.5 * (1 + Math.cos(Math.PI * norm));
-    return 1.0 + bell * 0.10; // Baseline 1.00 -> Slightly larger 1.10 at center!
+    return 1.0 + bell * 0.28; // Standard 1.00 original shape -> 1.28 enlarged when in center!
   });
 
   const opacity = useTransform(yProgress, (latestY) => {
-    if (!containerHeight) return 0.85;
+    if (!containerHeight) return 0.80;
     const cardCenter = index * SLOT_HEIGHT + SLOT_HEIGHT / 2 + latestY;
     const containerCenter = containerHeight / 2;
     const distance = Math.abs(cardCenter - containerCenter);
 
     const norm = Math.min(1, distance / 220);
     const bell = 0.5 * (1 + Math.cos(Math.PI * norm));
-    return 0.85 + bell * 0.15; // 0.85 baseline -> 1.00 active center
+    return 0.80 + bell * 0.20; // 0.80 standard -> 1.00 active center
   });
 
   const zIndex = useTransform(yProgress, (latestY) => {
@@ -39,9 +39,9 @@ const CardNode = ({ card, index, yProgress, containerHeight }) => {
     const cardCenter = index * SLOT_HEIGHT + SLOT_HEIGHT / 2 + latestY;
     const containerCenter = containerHeight / 2;
     const distance = Math.abs(cardCenter - containerCenter);
-    const norm = Math.min(1, distance / 200);
+    const norm = Math.min(1, distance / 220);
     const bell = 0.5 * (1 + Math.cos(Math.PI * norm));
-    return Math.round(1 + bell * 20); // 1 -> 21
+    return Math.round(1 + bell * 30); // 1 -> 31
   });
 
   return (
@@ -53,7 +53,7 @@ const CardNode = ({ card, index, yProgress, containerHeight }) => {
           zIndex,
           transformOrigin: "center center",
         }}
-        className="relative h-full w-full overflow-hidden rounded-[22px] bg-[#e7e7ea] shadow-[0_16px_45px_-12px_rgba(0,0,0,0.3)] ring-1 ring-neutral-900/10 pointer-events-auto"
+        className="relative h-full w-full overflow-hidden rounded-[22px] bg-[#e7e7ea] shadow-[0_16px_45px_-12px_rgba(0,0,0,0.3)] ring-1 ring-neutral-900/10 pointer-events-auto transition-shadow duration-300 hover:shadow-[0_25px_60px_-10px_rgba(0,0,0,0.45)]"
       >
         <img
           src={card.image}
@@ -72,12 +72,18 @@ const CardNode = ({ card, index, yProgress, containerHeight }) => {
 export const AutoScrollCarouselSection = () => {
   const containerRef = useRef(null);
   const [containerHeight, setContainerHeight] = useState(800);
+  const [isPaused, setIsPaused] = useState(false);
+  const isPausedRef = useRef(false);
   const yProgress = useMotionValue(-SET_HEIGHT); // Start in middle set zone
 
   // Endlessly smooth, glitch-free frame-rate independent vertical loop
   useAnimationFrame((_, delta) => {
+    if (isPausedRef.current) return;
+
+    // Safety cap on frame delta to prevent animation jumping/glitches after pause or tab switch
+    const safeDelta = Math.min(delta, 64);
     const speed = 0.055; // pixels per millisecond
-    let currentY = yProgress.get() - delta * speed;
+    let currentY = yProgress.get() - safeDelta * speed;
     if (currentY <= -2 * SET_HEIGHT) {
       currentY += SET_HEIGHT; // Seamless modulo shift (Set 3 -> Set 2 with 0px visual shift)
     }
@@ -94,6 +100,16 @@ export const AutoScrollCarouselSection = () => {
     window.addEventListener("resize", updateHeight);
     return () => window.removeEventListener("resize", updateHeight);
   }, []);
+
+  const handleMouseEnter = () => {
+    isPausedRef.current = true;
+    setIsPaused(true);
+  };
+
+  const handleMouseLeave = () => {
+    isPausedRef.current = false;
+    setIsPaused(false);
+  };
 
   return (
     <section
@@ -112,6 +128,11 @@ export const AutoScrollCarouselSection = () => {
               <span className="text-[13px] font-semibold text-neutral-900">
                 Active
               </span>
+              {isPaused && (
+                <span className="rounded-full bg-amber-500/10 px-2 py-0.5 font-mono text-[10px] font-medium text-amber-700 ring-1 ring-amber-500/20">
+                  Paused on Hover
+                </span>
+              )}
               <span className="text-neutral-400">→</span>
             </div>
           </div>
@@ -124,13 +145,18 @@ export const AutoScrollCarouselSection = () => {
           </h3>
           <p className="mt-3 text-[14px] leading-relaxed text-neutral-500">
             Continuous 5-node vertical composition with hardware-accelerated cosine distance scaling.
-            Active artwork highlights smoothly at the center axis line.
+            Active artwork highlights smoothly at the center axis line and pauses on cursor hover.
           </p>
         </div>
       </div>
 
-      {/* Right Column: Auto-Moving Vertical Image Track (w-1/2) */}
-      <div className="relative flex w-1/2 h-full items-center justify-center overflow-y-hidden overflow-x-visible">
+      {/* Right Column: Auto-Moving Vertical Image Track (w-1/2) - Autoplay Zone */}
+      <div
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+        data-testid="autoplay-zone"
+        className="relative flex w-1/2 h-full items-center justify-center overflow-y-hidden overflow-x-visible cursor-pointer"
+      >
         {/* Top & Bottom gradient fade masks for clean 5-node edge bleeding */}
         <div className="pointer-events-none absolute inset-x-0 top-0 z-20 h-20 bg-gradient-to-b from-[#e7e7ea] to-transparent" />
         <div className="pointer-events-none absolute inset-x-0 bottom-0 z-20 h-20 bg-gradient-to-t from-[#e7e7ea] to-transparent" />

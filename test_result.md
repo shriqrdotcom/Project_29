@@ -101,3 +101,35 @@
 #====================================================================================================
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
+
+user_problem_statement: Restored normal image shape (scale 1.0) and ensured smooth enlargement (scale 1.28) when any image moves into center position, with smooth shrinking as it autoscrolls up. Hover pause/resume active.
+frontend:
+  - task: "AutoScroll Carousel Center Image Scaling & Hover Pause/Resume"
+    implemented: true
+    working: true
+    file: "frontend/src/components/sections/AutoScrollCarouselSection.jsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "main"
+        comment: "Restored standard original card shape/size (1.00 baseline). Applied continuous cosine scaling up to 1.28 when active at the center line, which smoothly shrinks back to 1.00 as it autoscrolls up."
+
+metadata:
+  created_by: "main_agent"
+  version: "1.0"
+  test_sequence: 2
+  run_ui: true
+
+test_plan:
+  current_focus:
+    - "AutoScroll Carousel Center Image Scaling & Hover Pause/Resume"
+  stuck_tasks: []
+  test_all: false
+  test_priority: "high_first"
+
+agent_communication:
+  - agent: "main"
+    message: "Restored normal card size/shape at scale 1.00. Configured smooth cosine animation so images enlarge to scale 1.28 when entering the center axis line, and shrink back down smoothly to scale 1.00 as they autoscroll up past the center line without any glitch."
+
