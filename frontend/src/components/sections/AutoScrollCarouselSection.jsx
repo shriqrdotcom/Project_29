@@ -9,7 +9,7 @@ const SLOT_HEIGHT = 210; // 170px card + 40px gap-10 = 210px actual rendered slo
 const SET_HEIGHT = CARDS.length * SLOT_HEIGHT; // 7 * 210 = 1470px single set height
 
 const CardNode = ({ card, index, yProgress, containerHeight }) => {
-  // Distance-based continuous scaling: 1.00 (standard original shape) -> 1.28 (enlarged active center)
+  // Distance-based continuous scaling: 1.00 (standard original shape) -> 1.40 (enlarged active center)
   const scale = useTransform(yProgress, (latestY) => {
     if (!containerHeight) return 1.0;
     // Calculate card's current center relative to container center line
@@ -17,10 +17,11 @@ const CardNode = ({ card, index, yProgress, containerHeight }) => {
     const containerCenter = containerHeight / 2;
     const distance = Math.abs(cardCenter - containerCenter);
 
-    // Cosine distance activation curve centered at the screen line (220px radius)
-    const norm = Math.min(1, distance / 220);
+    // Cosine distance activation curve: localized magnifier centered on the screen line.
+    // Falloff reaches base at exactly +/- one card slot away, so only the centered card enlarges.
+    const norm = Math.min(1, distance / SLOT_HEIGHT);
     const bell = 0.5 * (1 + Math.cos(Math.PI * norm));
-    return 1.0 + bell * 0.28; // Standard 1.00 original shape -> 1.28 enlarged when in center!
+    return 1.0 + bell * 0.4; // 1.00 base (+/- cardHeight) -> 1.40 magnified at exact center
   });
 
   const opacity = useTransform(yProgress, (latestY) => {
