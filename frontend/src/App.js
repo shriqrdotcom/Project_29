@@ -1,6 +1,7 @@
 import "@/App.css";
 import { useLenis } from "@/hooks/useLenis";
 import { HeroScrollScene } from "@/components/hero/HeroScrollScene";
+import { AutoScrollCarouselSection } from "@/components/sections/AutoScrollCarouselSection";
 
 const MARQUEE_ITEMS = [
   "A place to display your masterpiece",
@@ -37,6 +38,7 @@ function App() {
   return (
     <div className="App min-h-screen bg-[#e7e7ea]">
       <HeroScrollScene />
+      <AutoScrollCarouselSection />
       <MarqueeFooter />
     </div>
   );
