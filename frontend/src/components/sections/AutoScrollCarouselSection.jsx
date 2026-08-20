@@ -7,15 +7,18 @@ const LOOP_CARDS = [...CARDS, ...CARDS, ...CARDS, ...CARDS, ...CARDS];
 
 const SLOT_HEIGHT = 210; // 170px card + 40px gap-10 = 210px actual rendered slot
 const SET_HEIGHT = CARDS.length * SLOT_HEIGHT; // 7 * 210 = 1470px single set height
+// Geometric center of the full vertical track. Because the track is vertically
+// centered (items-center) inside the container, the active card is the one whose
+// local center + current y offset lands on this content center line — the container
+// height cancels out, so this stays correct at every viewport height.
+const CONTENT_CENTER = (LOOP_CARDS.length * SLOT_HEIGHT) / 2;
 
 const CardNode = ({ card, index, yProgress, containerHeight }) => {
   // Distance-based continuous scaling: 1.00 (standard original shape) -> 1.40 (enlarged active center)
   const scale = useTransform(yProgress, (latestY) => {
-    if (!containerHeight) return 1.0;
-    // Calculate card's current center relative to container center line
+    // Card's live center within the track vs the track content center line.
     const cardCenter = index * SLOT_HEIGHT + SLOT_HEIGHT / 2 + latestY;
-    const containerCenter = containerHeight / 2;
-    const distance = Math.abs(cardCenter - containerCenter);
+    const distance = Math.abs(cardCenter - CONTENT_CENTER);
 
     // Cosine distance activation curve: localized magnifier centered on the screen line.
     // Falloff reaches base at exactly +/- one card slot away, so only the centered card enlarges.
@@ -25,22 +28,18 @@ const CardNode = ({ card, index, yProgress, containerHeight }) => {
   });
 
   const opacity = useTransform(yProgress, (latestY) => {
-    if (!containerHeight) return 0.80;
     const cardCenter = index * SLOT_HEIGHT + SLOT_HEIGHT / 2 + latestY;
-    const containerCenter = containerHeight / 2;
-    const distance = Math.abs(cardCenter - containerCenter);
+    const distance = Math.abs(cardCenter - CONTENT_CENTER);
 
-    const norm = Math.min(1, distance / 220);
+    const norm = Math.min(1, distance / SLOT_HEIGHT);
     const bell = 0.5 * (1 + Math.cos(Math.PI * norm));
     return 0.80 + bell * 0.20; // 0.80 standard -> 1.00 active center
   });
 
   const zIndex = useTransform(yProgress, (latestY) => {
-    if (!containerHeight) return 1;
     const cardCenter = index * SLOT_HEIGHT + SLOT_HEIGHT / 2 + latestY;
-    const containerCenter = containerHeight / 2;
-    const distance = Math.abs(cardCenter - containerCenter);
-    const norm = Math.min(1, distance / 220);
+    const distance = Math.abs(cardCenter - CONTENT_CENTER);
+    const norm = Math.min(1, distance / SLOT_HEIGHT);
     const bell = 0.5 * (1 + Math.cos(Math.PI * norm));
     return Math.round(1 + bell * 30); // 1 -> 31
   });
