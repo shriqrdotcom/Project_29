@@ -5,7 +5,7 @@ import { CARDS } from "../../data/cards";
 // 7-card list duplicated 5 times for a mathematically seamless, glitch-free infinite vertical loop
 const LOOP_CARDS = [...CARDS, ...CARDS, ...CARDS, ...CARDS, ...CARDS];
 
-const SLOT_HEIGHT = 210; // 170px card + 40px gap-10 = 210px actual rendered slot
+const SLOT_HEIGHT = 234; // 170px card + 64px gap-16 = 234px actual rendered slot
 const SET_HEIGHT = CARDS.length * SLOT_HEIGHT; // 7 * 210 = 1470px single set height
 // Geometric center of the full vertical track. Because the track is vertically
 // centered (items-center) inside the container, the active card is the one whose
@@ -165,7 +165,7 @@ export const AutoScrollCarouselSection = () => {
         <div className="pointer-events-none absolute left-0 right-0 top-1/2 z-10 h-px -translate-y-1/2 border-b border-dashed border-neutral-400/30" />
 
         {/* Infinite vertical scrolling loop */}
-        <motion.div style={{ y: yProgress }} className="flex flex-col items-center gap-10">
+        <motion.div style={{ y: yProgress }} className="flex flex-col items-center gap-16">
           {LOOP_CARDS.map((card, i) => (
             <CardNode
               key={`${card.id}-${i}`}
