@@ -41,7 +41,19 @@
 ##         -agent: "main"  # or "testing" or "user"
 ##         -comment: "Detailed comment about status"
 ##
-## metadata:
+##   - task: "Dual-Card Bento Section (Meets new people / Archive of new arts)"
+    implemented: true
+    working: "NA"
+    file: "frontend/src/components/sections/DualCardSection.jsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "New section directly below Marketplace, above footer. 2-col grid (grid-cols-1 -> md:grid-cols-2, gap-6/8). Card1 magenta with self-hosted portrait (mix-blend-luminosity) + bottom gradient + white text + white pill Lets Meet. Card2 white with self-hosted 3D flower top-right + black text + dark pill Archives. Bottom-anchored content (flex justify-end). Entrance: whileInView slide-up + fade with staggerChildren so left enters before right; viewport once:false (replays). Images self-hosted at /images/ (verified HTTP 200)."
+
+metadata:
 ##   created_by: "main_agent"
 ##   version: "1.0"
 ##   test_sequence: 0
@@ -156,5 +168,5 @@ test_plan:
 
 agent_communication:
   - agent: "main"
-    message: "Added two new independent sections below the existing vertical auto-carousel (carousel code untouched). (1) Narrative Thread: 4 differently-shaped cards revealing sequentially 1->2->3->4 on scroll. (2) Marketplace: staggered blur-reveal (blur 10px -> 0, x 30 -> 0, opacity 0 -> 1) cascading left-to-right. NOTE: static screenshot harness freezes requestAnimationFrame so verify in interactive browser. Verify reveal order/timing, distinct card shapes, content, and that the existing carousel is unchanged."
+    message: "REPLAY + INTERACTIVITY fix. (1) Marketplace blur-reveal: changed useInView once:true -> once:false so the staggered blur-reveal REPLAYS every time the section re-enters the viewport; added hover on each square card (hover:scale-[1.05] + hover:shadow-2xl, 300ms). (2) Narrative Thread: also once:false for consistent replay. (3) Vertical carousel: pause-on-hover + continuous rAF loop were ALREADY implemented (freeze yProgress on hover keeps center scale, resumes from current position, no snap) - left unchanged. Please VERIFY in interactive browser: scroll to Marketplace, scroll away and back, confirm blur-reveal replays each time; hover a card -> scales up + shadow; and carousel still pauses on hover keeping the center magnification. MUST execute Playwright and report measured opacity/filter timelines."
 

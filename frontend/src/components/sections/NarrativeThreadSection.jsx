@@ -28,8 +28,9 @@ const headingVariants = {
 
 export const NarrativeThreadSection = () => {
   const ref = useRef(null);
-  // Deterministic trigger: fires once when 20% of the section scrolls into view.
-  const inView = useInView(ref, { once: true, amount: 0.2 });
+  // REPLAY FIX: once:false re-triggers the sequential card reveal every time the
+  // section re-enters the viewport (consistent replay behavior on scroll back).
+  const inView = useInView(ref, { once: false, amount: 0.2 });
   const state = inView ? "show" : "hidden";
 
   return (

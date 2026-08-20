@@ -4,6 +4,7 @@ import { HeroScrollScene } from "@/components/hero/HeroScrollScene";
 import { AutoScrollCarouselSection } from "@/components/sections/AutoScrollCarouselSection";
 import { NarrativeThreadSection } from "@/components/sections/NarrativeThreadSection";
 import { MarketplaceSection } from "@/components/sections/MarketplaceSection";
+import { DualCardSection } from "@/components/sections/DualCardSection";
 
 const MARQUEE_ITEMS = [
   "A place to display your masterpiece",
@@ -43,6 +44,7 @@ function App() {
       <AutoScrollCarouselSection />
       <NarrativeThreadSection />
       <MarketplaceSection />
+      <DualCardSection />
       <MarqueeFooter />
     </div>
   );

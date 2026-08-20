@@ -64,7 +64,9 @@ const CardVisual = ({ item }) => {
 
 export const MarketplaceSection = () => {
   const ref = useRef(null);
-  const inView = useInView(ref, { once: true, amount: 0.2 });
+  // REPLAY FIX: once:false re-triggers the staggered blur-reveal EVERY time the
+  // section re-enters the viewport (was once:true, which only played on first load).
+  const inView = useInView(ref, { once: false, amount: 0.2 });
   const state = inView ? "show" : "hidden";
 
   return (
@@ -167,7 +169,7 @@ export const MarketplaceSection = () => {
                   animate={state}
                   data-testid={`mp-card-${i + 1}`}
                 >
-                  <div className="aspect-square w-full overflow-hidden rounded-[20px] shadow-sm">
+                  <div className="aspect-square w-full cursor-pointer overflow-hidden rounded-[20px] shadow-sm transition-[transform,box-shadow] duration-300 will-change-transform hover:scale-[1.05] hover:shadow-2xl">
                     <CardVisual item={item} />
                   </div>
                   <p className="mt-3 text-[14px] font-semibold text-neutral-900">
