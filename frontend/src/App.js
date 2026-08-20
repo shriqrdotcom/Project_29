@@ -3,6 +3,7 @@ import { useLenis } from "@/hooks/useLenis";
 import { HeroScrollScene } from "@/components/hero/HeroScrollScene";
 import { AutoScrollCarouselSection } from "@/components/sections/AutoScrollCarouselSection";
 import { NarrativeThreadSection } from "@/components/sections/NarrativeThreadSection";
+import { MarketplaceSection } from "@/components/sections/MarketplaceSection";
 
 const MARQUEE_ITEMS = [
   "A place to display your masterpiece",
@@ -41,6 +42,7 @@ function App() {
       <HeroScrollScene />
       <AutoScrollCarouselSection />
       <NarrativeThreadSection />
+      <MarketplaceSection />
       <MarqueeFooter />
     </div>
   );

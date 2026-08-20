@@ -114,7 +114,31 @@ frontend:
     status_history:
       - working: true
         agent: "main"
-        comment: "Restored standard original card shape/size (1.00 baseline). Applied continuous cosine scaling up to 1.28 when active at the center line, which smoothly shrinks back to 1.00 as it autoscrolls up."
+        comment: "Restored standard original card shape/size (1.00 baseline). Applied continuous cosine scaling up to 1.28 when active at the center line, which smoothly shrinks back to 1.00 as it autoscrolls up. Later raised peak to 1.4, fixed distance reference to the track content-center, and increased slot gap (gap-16) so the enlarged center card keeps balanced, uniform spacing."
+
+  - task: "Narrative Thread Section (staggered scroll reveal + asymmetric bento)"
+    implemented: true
+    working: "NA"
+    file: "frontend/src/components/sections/NarrativeThreadSection.jsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "New white section below the carousel with centered eyebrow+heading and 4 differently-proportioned cards. Cards reveal sequentially 1->2->3->4 via useInView + per-card delay (fade + slide-up + subtle scale)."
+
+  - task: "Marketplace Section (staggered blur-reveal, left-to-right)"
+    implemented: true
+    working: "NA"
+    file: "frontend/src/components/sections/MarketplaceSection.jsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "New independent section at the very bottom (before footer). Staggered blur-fade-slide entrance (opacity 0, x 30px, blur(10px) -> final) via useInView + custom index cascade left-to-right."
 
 metadata:
   created_by: "main_agent"
@@ -124,12 +148,13 @@ metadata:
 
 test_plan:
   current_focus:
-    - "AutoScroll Carousel Center Image Scaling & Hover Pause/Resume"
+    - "Narrative Thread Section (staggered scroll reveal + asymmetric bento)"
+    - "Marketplace Section (staggered blur-reveal, left-to-right)"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
 
 agent_communication:
   - agent: "main"
-    message: "Restored normal card size/shape at scale 1.00. Configured smooth cosine animation so images enlarge to scale 1.28 when entering the center axis line, and shrink back down smoothly to scale 1.00 as they autoscroll up past the center line without any glitch."
-
+    message: "Added two new independent sections below the existing vertical auto-carousel (carousel code untouched). (1) Narrative Thread: 4 differently-shaped cards revealing sequentially 1->2->3->4 on scroll. (2) Marketplace: staggered blur-reveal (blur 10px -> 0, x 30 -> 0, opacity 0 -> 1) cascading left-to-right. NOTE: static screenshot harness freezes requestAnimationFrame so verify in interactive browser. Verify reveal order/timing, distinct card shapes, content, and that the existing carousel is unchanged."
+
