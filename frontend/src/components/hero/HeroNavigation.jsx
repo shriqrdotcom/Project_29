@@ -24,7 +24,7 @@ export const HeroNavigation = () => {
       data-testid="hero-nav"
       initial={{ opacity: 0, y: -14 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay: 0.15 }}
+      transition={{ duration: 0.35, ease: [0.2, 0.8, 0.2, 1.0], delay: 0.05 }}
       className="relative z-50 flex items-center justify-between px-5 sm:px-8 lg:px-12 pt-6 sm:pt-7"
     >
       <a
