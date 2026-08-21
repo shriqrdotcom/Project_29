@@ -114,8 +114,20 @@ metadata:
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
 
-user_problem_statement: Restored normal image shape (scale 1.0) and ensured smooth enlargement (scale 1.28) when any image moves into center position, with smooth shrinking as it autoscrolls up. Hover pause/resume active.
+user_problem_statement: Rebuild the Phase 4 Folder Card UI to match Target Design Reference Image 1 exactly, replacing the previous plain rectangular tab with the authentic angled folder tab silhouette, portrait card proportions, balanced 3x2 grid, and exact 6 artwork sequence (Staff, le Fleur, The Green Knight, All Good Things, Limmer, Fluffy Worm).
 frontend:
+  - task: "Phase 4 Folder Component Reconstruction (Matching Reference Image 1)"
+    implemented: true
+    working: true
+    file: "frontend/src/components/hero/Phase4Folder.jsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "main"
+        comment: "Rebuilt the Phase 4 folder container to match Reference Image 1: custom SVG silhouette for the dark Personal tab with diagonal shoulder cutout and clean white typography, accurate folder background panel with Business + Create header, portrait card aspect ratios (148x178), and balanced 3x2 grid positioning."
+
   - task: "AutoScroll Carousel Center Image Scaling & Hover Pause/Resume"
     implemented: true
     working: true
@@ -128,45 +140,21 @@ frontend:
         agent: "main"
         comment: "Restored standard original card shape/size (1.00 baseline). Applied continuous cosine scaling up to 1.28 when active at the center line, which smoothly shrinks back to 1.00 as it autoscrolls up. Later raised peak to 1.4, fixed distance reference to the track content-center, and increased slot gap (gap-16) so the enlarged center card keeps balanced, uniform spacing."
 
-  - task: "Narrative Thread Section (staggered scroll reveal + asymmetric bento)"
-    implemented: true
-    working: "NA"
-    file: "frontend/src/components/sections/NarrativeThreadSection.jsx"
-    stuck_count: 0
-    priority: "high"
-    needs_retesting: true
-    status_history:
-      - working: "NA"
-        agent: "main"
-        comment: "New white section below the carousel with centered eyebrow+heading and 4 differently-proportioned cards. Cards reveal sequentially 1->2->3->4 via useInView + per-card delay (fade + slide-up + subtle scale)."
-
-  - task: "Marketplace Section (staggered blur-reveal, left-to-right)"
-    implemented: true
-    working: "NA"
-    file: "frontend/src/components/sections/MarketplaceSection.jsx"
-    stuck_count: 0
-    priority: "high"
-    needs_retesting: true
-    status_history:
-      - working: "NA"
-        agent: "main"
-        comment: "New independent section at the very bottom (before footer). Staggered blur-fade-slide entrance (opacity 0, x 30px, blur(10px) -> final) via useInView + custom index cascade left-to-right."
-
 metadata:
   created_by: "main_agent"
   version: "1.0"
-  test_sequence: 2
+  test_sequence: 3
   run_ui: true
 
 test_plan:
   current_focus:
-    - "Narrative Thread Section (staggered scroll reveal + asymmetric bento)"
-    - "Marketplace Section (staggered blur-reveal, left-to-right)"
+    - "Phase 4 Folder Component Reconstruction (Matching Reference Image 1)"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
 
 agent_communication:
   - agent: "main"
-    message: "REPLAY + INTERACTIVITY fix. (1) Marketplace blur-reveal: changed useInView once:true -> once:false so the staggered blur-reveal REPLAYS every time the section re-enters the viewport; added hover on each square card (hover:scale-[1.05] + hover:shadow-2xl, 300ms). (2) Narrative Thread: also once:false for consistent replay. (3) Vertical carousel: pause-on-hover + continuous rAF loop were ALREADY implemented (freeze yProgress on hover keeps center scale, resumes from current position, no snap) - left unchanged. Please VERIFY in interactive browser: scroll to Marketplace, scroll away and back, confirm blur-reveal replays each time; hover a card -> scales up + shadow; and carousel still pauses on hover keeping the center magnification. MUST execute Playwright and report measured opacity/filter timelines."
+    message: "Rebuilt Phase 4 folder component to match Reference Image 1: replaced flat rectangle tab with the authentic angled folder tab silhouette, updated 3x2 grid geometry to portrait proportions, and aligned the 6 target artwork images."
+
 

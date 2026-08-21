@@ -108,13 +108,13 @@ const P3 = {
 // (it fades out during the morph). Grid rows: [staff,fleur,knight] /
 // [allgood,limmer,fluffy].
 export const PHASE3_CARDS = [
-  { id: "p0", type: "image", image: P3.allgood, title: "All Good Things", rs: -10, x: -450, y: -177, r: -8, z: 1, g: { x: 55, y: 125 } },
+  { id: "p0", type: "image", image: P3.allgood, title: "All Good Things", rs: -10, x: -450, y: -177, r: -8, z: 1, g: { x: 57, y: 172 } },
   { id: "p1", type: "info", rs: 6, x: -300, y: -113, r: -3, z: 7, g: null },
-  { id: "p2", type: "image", image: P3.staff, title: "Staff Only", rs: 9, x: -150, y: -49, r: -2, z: 2, g: { x: 55, y: -21 } },
-  { id: "p3", type: "image", image: P3.fleur, title: "le Fleur", rs: -6, x: 0, y: 15, r: 0, z: 3, g: { x: 217, y: -21 } },
-  { id: "p4", type: "image", image: P3.knight, title: "The Green Knight", rs: 5, x: 150, y: 79, r: 1, z: 4, g: { x: 379, y: -21 } },
-  { id: "p5", type: "image", image: P3.limmer, title: "Limmer", rs: -9, x: 300, y: 143, r: 2, z: 5, g: { x: 217, y: 125 } },
-  { id: "p6", type: "image", image: P3.fluffy, title: "Fluffy Worm", rs: -3, x: 450, y: 207, r: 4, z: 6, g: { x: 379, y: 125 } },
+  { id: "p2", type: "image", image: P3.staff, title: "Staff Only", rs: 9, x: -150, y: -49, r: -2, z: 2, g: { x: 57, y: -20 } },
+  { id: "p3", type: "image", image: P3.fleur, title: "le Fleur", rs: -6, x: 0, y: 15, r: 0, z: 3, g: { x: 217, y: -20 } },
+  { id: "p4", type: "image", image: P3.knight, title: "The Green Knight", rs: 5, x: 150, y: 79, r: 1, z: 4, g: { x: 377, y: -20 } },
+  { id: "p5", type: "image", image: P3.limmer, title: "Limmer", rs: -9, x: 300, y: 143, r: 2, z: 5, g: { x: 217, y: 172 } },
+  { id: "p6", type: "image", image: P3.fluffy, title: "Fluffy Worm", rs: -3, x: 450, y: 207, r: 4, z: 6, g: { x: 377, y: 172 } },
 ];
 
 // Speech bubbles: alician/andrea belong to the centre-stack state (fade out on

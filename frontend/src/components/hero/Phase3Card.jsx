@@ -41,7 +41,7 @@ export const Phase3Card = ({ card, progress, mult, dims }) => {
   const rotate = useTransform(progress, stops, [card.rs, card.r, card.r, g ? 0 : card.r]);
   const width = useTransform(progress, [hold, gridEnd], [dims.pw, g ? dims.gw : dims.pw]);
   const height = useTransform(progress, [hold, gridEnd], [dims.ph, g ? dims.gh : dims.ph]);
-  const radius = useTransform(progress, [hold, gridEnd], [18, 14]);
+  const radius = useTransform(progress, [hold, gridEnd], [18, 16]);
 
   // Info card fades in during the fan, then fades out as the grid forms.
   const whiteOpacity = useTransform(progress, [0.66, 0.74, hold, hold + 0.05], [0, 1, 1, 0]);

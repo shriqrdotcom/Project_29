@@ -53,8 +53,8 @@ export const Phase3Scene = ({ progress, rs }) => {
   const dims = {
     pw: rs.p3card,
     ph: Math.round(rs.p3card * 1.34),
-    gw: Math.round(150 * mult),
-    gh: Math.round(132 * mult),
+    gw: Math.round(148 * mult),
+    gh: Math.round(178 * mult),
   };
 
   const bgOpacity = useTransform(progress, [fanStart, fanStart + 0.07], [1, 0]);
