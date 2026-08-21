@@ -1,5 +1,12 @@
 import { useEffect, useRef, useState } from "react";
-import { motion, useScroll, useSpring, useTransform } from "framer-motion";
+import {
+  motion,
+  useScroll,
+  useSpring,
+  useTransform,
+  useMotionValue,
+  useMotionValueEvent,
+} from "framer-motion";
 import { HeroNavigation } from "./HeroNavigation";
 import { HeroHeadline } from "./HeroHeadline";
 import { ArtworkCard } from "./ArtworkCard";
@@ -43,11 +50,71 @@ export const HeroScrollScene = () => {
     offset: ["start start", "end end"],
   });
 
-  const progress = useSpring(scrollYProgress, {
+  // ── Opening intro (auto-play, NOT scroll-driven) ─────────────────────────
+  // On page load the opening fan (Image 1 → 2 → 3) plays automatically over
+  // ~2.1s. The master progress is `max(intro, scroll)`:
+  //   • `intro` is a timed motion value that ramps 0 → INTRO_END (fully-open
+  //     hero = Reference Image 3) and then stays there.
+  //   • `scrollYProgress` drives everything once the user scrolls past the
+  //     intro point.
+  // Using max() keeps the ORIGINAL scroll timeline completely untouched (no
+  // compression / retuning), never replays the fan, and is immune to tiny
+  // phantom scrolls on load — the hero simply holds in its open state until the
+  // user actually scrolls beyond it.
+  const INTRO_END = 0.12; // progress at the fully-open hero (Reference Image 3)
+
+  const intro = useMotionValue(0);
+  const rawProgress = useMotionValue(0);
+  const progress = useSpring(rawProgress, {
     stiffness: 90,
     damping: 26,
     mass: 0.35,
     restDelta: 0.0005,
+  });
+
+  useEffect(() => {
+    // Always begin the intro from the very top (Image 1) on every load/refresh.
+    if (typeof window !== "undefined") {
+      if ("scrollRestoration" in window.history) {
+        window.history.scrollRestoration = "manual";
+      }
+      window.scrollTo(0, 0);
+    }
+    // Let the entrance play first (Images 1→4): headline word-by-word reveal +
+    // the green card flying up from below + nav fade-in. After ~1.4s the single
+    // centred card has settled, so THEN we open the fan (Image 5 → full 7-card
+    // fan) by ramping the intro value to INTRO_END over ~2.0s.
+    //
+    // NOTE: framer-motion's imperative animate() does not tick reliably when
+    // started after its frameloop has gone idle (during the initial hold). We
+    // instead drive `intro` with a timer-based tween (setInterval) so its
+    // `change` listener always fires. Scheduling via setTimeout + clearing the
+    // timers on unmount keeps this StrictMode-safe.
+    const RAMP_MS = 2000;
+    // Premium ease: fast initial movement + smooth deceleration + clean settle.
+    const easeOut = (x) => 1 - Math.pow(1 - x, 3);
+    let tweenId;
+    const startId = setTimeout(() => {
+      const t0 = performance.now();
+      tweenId = setInterval(() => {
+        const p = Math.min(1, (performance.now() - t0) / RAMP_MS);
+        intro.set(INTRO_END * easeOut(p));
+        if (p >= 1) clearInterval(tweenId);
+      }, 16);
+    }, 1400);
+    return () => {
+      clearTimeout(startId);
+      if (tweenId) clearInterval(tweenId);
+    };
+  }, [intro]);
+
+  // rawProgress = max(intro, scroll): the intro opens the fan, then normal
+  // scrolling (unchanged mapping) takes over seamlessly once it exceeds INTRO_END.
+  useMotionValueEvent(intro, "change", (v) => {
+    rawProgress.set(Math.max(v, scrollYProgress.get()));
+  });
+  useMotionValueEvent(scrollYProgress, "change", (v) => {
+    rawProgress.set(Math.max(v, intro.get()));
   });
 
   // Existing sequence (hero fan -> collapse -> e-commerce) now plays across the
@@ -68,7 +135,7 @@ export const HeroScrollScene = () => {
   const newScale = useTransform(progress, [0.56, 0.62], [0.98, 1]);
   const newPE = useTransform(progress, [0.56, 0.57], ["none", "auto"]);
 
-  const hintOpacity = useTransform(scrollYProgress, [0, 0.1], [1, 0]);
+  const hintOpacity = useTransform(progress, [0, INTRO_END], [1, 0]);
   const barScaleX = useTransform(progress, [0, 1], [0, 1]);
 
   return (

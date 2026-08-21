@@ -10,14 +10,6 @@ const NAV_ITEMS = [
   "E-Commerce",
 ];
 
-const BrandMark = () => (
-  <svg width="26" height="26" viewBox="0 0 32 32" fill="none" aria-hidden="true">
-    <path d="M4 20 L28 4 L18 20 Z" fill="#2fb39a" />
-    <path d="M18 20 L28 4 L24 26 Z" fill="#0f766e" />
-    <path d="M4 20 L18 20 L11 27 Z" fill="#7fd8c6" />
-  </svg>
-);
-
 export const HeroNavigation = () => {
   return (
     <motion.nav
@@ -30,14 +22,14 @@ export const HeroNavigation = () => {
       <a
         href="#"
         data-testid="brand-logo"
-        className="flex items-center gap-2.5 group"
+        className="flex items-center group"
       >
-        <span className="transition-transform duration-500 group-hover:rotate-[-8deg]">
-          <BrandMark />
-        </span>
-        <span className="font-display text-[17px] font-semibold tracking-tight text-neutral-900">
-          unoneo
-        </span>
+        <img
+          src="/images/unoneo-logo.png?v=2"
+          alt="unoneo"
+          draggable="false"
+          className="h-[18px] w-auto select-none transition-opacity duration-300 group-hover:opacity-80"
+        />
       </a>
 
       <div className="hidden lg:flex items-center gap-7">
