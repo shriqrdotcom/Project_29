@@ -154,10 +154,10 @@ export const AutoScrollCarouselSection = () => {
     <section
       ref={containerRef}
       data-testid="auto-scroll-section"
-      className="relative flex h-screen min-h-[480px] max-h-[1080px] w-full overflow-hidden bg-[#e7e7ea] px-4 sm:px-10 md:px-16"
+      className="relative flex h-screen min-h-[480px] max-h-[1080px] w-full overflow-hidden bg-[#e7e7ea] px-4 sm:px-10 md:px-16 isolate"
     >
-      {/* Left Column: Static Center Screen Line & Indicator (w-1/2, min-w-0, z-20) */}
-      <div className="relative flex w-1/2 min-w-0 flex-col justify-center pr-4 sm:pr-8 md:pr-12 z-20">
+      {/* Bottom Layer (Back): Text Container (z-10) */}
+      <div className="relative flex w-1/2 min-w-0 flex-col justify-center pr-4 sm:pr-8 md:pr-12 z-10">
         <div className="relative flex items-center gap-2 sm:gap-4">
           <div className="flex flex-col gap-1 shrink-0">
             <span className="font-mono text-[10px] sm:text-[11px] uppercase tracking-[0.2em] sm:tracking-[0.28em] text-neutral-400">
@@ -189,12 +189,15 @@ export const AutoScrollCarouselSection = () => {
         </div>
       </div>
 
-      {/* Right Column: Auto-Moving Vertical Image Track (w-1/2, min-w-0, overflow-hidden, z-10) */}
+      {/* Middle Layer: Absolute Positioned Transparent Div (z-20, pointer-events-none) */}
+      <div className="pointer-events-none absolute inset-0 z-20" aria-hidden="true" />
+
+      {/* Top Layer (Front): Animation Container (z-30) */}
       <div
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
         data-testid="autoplay-zone"
-        className="relative flex w-1/2 min-w-0 h-full items-center justify-center overflow-hidden z-10 cursor-pointer"
+        className="relative flex w-1/2 min-w-0 h-full items-center justify-center overflow-hidden z-30 cursor-pointer"
       >
         {/* Top & Bottom gradient fade masks for clean 5-node edge bleeding */}
         <div className="pointer-events-none absolute inset-x-0 top-0 z-30 h-16 sm:h-24 bg-gradient-to-b from-[#e7e7ea] via-[#e7e7ea]/80 to-transparent" />
