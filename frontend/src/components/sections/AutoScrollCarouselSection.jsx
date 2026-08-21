@@ -197,7 +197,7 @@ export const AutoScrollCarouselSection = () => {
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
         data-testid="autoplay-zone"
-        className="relative flex w-1/2 min-w-0 h-full items-center justify-center overflow-hidden z-30 cursor-pointer"
+        className="relative flex w-1/2 min-w-0 h-full items-center justify-center overflow-y-clip overflow-x-visible z-30 cursor-pointer"
       >
         {/* Top & Bottom gradient fade masks for clean 5-node edge bleeding */}
         <div className="pointer-events-none absolute inset-x-0 top-0 z-30 h-16 sm:h-24 bg-gradient-to-b from-[#e7e7ea] via-[#e7e7ea]/80 to-transparent" />
