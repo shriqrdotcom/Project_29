@@ -13,7 +13,7 @@ const line2 = [{ t: "masterpiece.", c: "dark" }];
 const container = {
   hidden: {},
   show: {
-    transition: { staggerChildren: 0.04, delayChildren: 0.08 },
+    transition: { staggerChildren: 0.06, delayChildren: 0.35 },
   },
 };
 
@@ -21,7 +21,7 @@ const wordMask = {
   hidden: { y: "112%" },
   show: {
     y: "0%",
-    transition: { duration: 0.38, ease: [0.2, 0.8, 0.2, 1.0] },
+    transition: { duration: 0.9, ease: [0.16, 1, 0.3, 1] },
   },
 };
 

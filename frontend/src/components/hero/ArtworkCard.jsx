@@ -49,7 +49,7 @@ export const ArtworkCard = ({ card, fan, ecom, progress, sx, sy, ex, isGreen }) 
       <motion.div
         initial={isGreen ? { y: 130, scale: 0.72, opacity: 0, rotate: -8 } : false}
         animate={isGreen ? { y: 0, scale: 1, opacity: 1, rotate: 0 } : false}
-        transition={{ duration: 0.35, ease: [0.2, 0.8, 0.2, 1.0], delay: 0.05 }}
+        transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
         className="pointer-events-auto flex items-center justify-center"
       >
         <motion.div
